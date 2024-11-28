@@ -7,13 +7,14 @@ import { ListeCollaborateurComponent } from './pages/liste-collaborateur/liste-c
 import { AbsenceComponent } from './pages/absence/absence.component';
 import { DeconnexionComponent } from './pages/deconnexion/deconnexion.component';
 
+
 export const routes: Routes = [
-  { path: '', component: AboutComponent },
-  { path: 'header', component: HeaderComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'administrateur', component: AdministrateurComponent },
-  { path: 'listeCollaborateur', component: ListeCollaborateurComponent },
-  { path: 'absence', component: AbsenceComponent },
-  { path: 'deconnexion', component: DeconnexionComponent },
-  { path: '**', redirectTo: 'login' }
+    { path: '', component: AboutComponent },
+    { path: 'header', component: HeaderComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'administrateur', component: AdministrateurComponent },
+    { path: 'listeCollaborateur', component: ListeCollaborateurComponent },
+    { path: 'absence', component: AbsenceComponent },
+    { path: 'deconnexion', component: DeconnexionComponent },
+    { path: '**', redirectTo: 'login' }
 ];
