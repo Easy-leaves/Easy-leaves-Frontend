@@ -36,7 +36,7 @@ export class LoginComponent {
 
     this.loginService.seConnecter(loginData).subscribe({
       next: (response) => {
-        console.log("Result connection : ", response);
+        // console.log("Result connection : ", response);
         if (response.token) {
           localStorage.setItem('token', response.token);
           this.router.navigate(['/']);
