@@ -1,1 +1,16 @@
-<p>liste-collaborateur works!</p>
+<div class="menu">
+	<button (click)="changerVue('liste')">Liste Congés par département</button>
+	<button (click)="changerVue('histogramme')">Histogramme par département</button>
+	<button (click)="changerVue('gestionAbsences')">Gestion des Absences</button>
+</div>
+
+<div class="contenu">
+  <!-- Affiche Gestion des Absences si vueActive est 'gestionAbsences' -->
+  <app-gestion-absences *ngIf="vueActive === 'gestionAbsences'"></app-gestion-absences>
+
+  <!-- Affiche une autre section si vueActive est 'autreOption' -->
+  <div *ngIf="vueActive !== 'gestionAbsences'">
+    <h1>Autre Option</h1>
+    <p>Contenu pour l'autre option...</p>
+  </div>
+</div>

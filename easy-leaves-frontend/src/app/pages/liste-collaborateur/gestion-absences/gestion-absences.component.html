@@ -1,0 +1,16 @@
+<div class="gestion-conge">
+  <h1 class="text-4xl font-bold">Gestion des Congés</h1>
+  <div *ngIf="absences.length > 0; else aucuneDemande">
+    <app-carte-absence 
+	  *ngFor="let absence of absences"
+      [utilisateur]="absence.utilisateur"
+      [type]="absence.type"
+      [dates]="absence.dates"
+      (valider)="onValider(absence.id)"
+      (refuser)="onRefuser(absence.id)">
+    </app-carte-absence>
+  </div>
+  <ng-template #aucuneDemande>
+    <p>Aucune demande à traiter.</p>
+  </ng-template>
+</div>

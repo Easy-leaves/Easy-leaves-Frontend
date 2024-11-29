@@ -1,0 +1,13 @@
+.gestion-conge {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.gestion-conge h1 {
+  text-align: center;
+}
+
+.gestion-conge p {
+  text-align: center;
+  color: gray;
+}

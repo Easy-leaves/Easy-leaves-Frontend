@@ -1,0 +1,14 @@
+<div class="carte-absence">
+  <div class="carte-info">
+    <img [src]="utilisateur.image" [alt]="utilisateur.nom" class="avatar" />
+    <div>
+      <h3>{{ utilisateur.nom }}</h3>
+      <p>Type : {{ type }}</p>
+      <p>Dates : {{ dates }}</p>
+    </div>
+  </div>
+  <div class="carte-actions">
+    <button class="btn btn-valider" (click)="onValider()">Valider</button>
+    <button class="btn btn-refuser" (click)="onRefuser()">Refuser</button>
+  </div>
+</div>
