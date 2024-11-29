@@ -6,15 +6,16 @@ import { AdministrateurComponent } from './pages/administrateur/administrateur.c
 import { ListeCollaborateurComponent } from './pages/liste-collaborateur/liste-collaborateur.component';
 import { AbsenceComponent } from './pages/absence/absence.component';
 import { DeconnexionComponent } from './pages/deconnexion/deconnexion.component';
+import { AuthGuard } from './guard/auth.guard';
 
 
 export const routes: Routes = [
-    { path: '', component: AboutComponent },
-    { path: 'header', component: HeaderComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'administrateur', component: AdministrateurComponent },
-    { path: 'listeCollaborateur', component: ListeCollaborateurComponent },
-    { path: 'absence', component: AbsenceComponent },
-    { path: 'deconnexion', component: DeconnexionComponent },
-    { path: '**', redirectTo: 'login' }
+  { path: '', component: AboutComponent, canActivate: [AuthGuard] },
+  { path: 'header', component: HeaderComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'administrateur', component: AdministrateurComponent, canActivate: [AuthGuard] },
+  { path: 'listeCollaborateur', component: ListeCollaborateurComponent, canActivate: [AuthGuard] },
+  { path: 'absence', component: AbsenceComponent, canActivate: [AuthGuard] },
+  { path: 'deconnexion', component: DeconnexionComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
