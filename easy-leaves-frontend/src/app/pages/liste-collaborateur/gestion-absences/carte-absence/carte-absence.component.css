@@ -1,0 +1,46 @@
+.carte-absence {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+}
+
+.carte-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.carte-info .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.carte-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-valider {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-refuser {
+  background-color: #f44336;
+  color: white;
+}
