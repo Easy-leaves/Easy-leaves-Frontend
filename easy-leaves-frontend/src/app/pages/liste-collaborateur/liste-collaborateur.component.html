@@ -1,1 +1,31 @@
-<p>liste-collaborateur works!</p>
+<div class="m-20">
+  <!-- Month Selector -->
+  <div class="mb-8">
+    <label for="monthPicker" class="block text-sm font-medium text-gray-700">Sélectionner le mois et l'année</label>
+    <input
+      id="monthPicker"
+      type="month"
+      (change)="onMonthChange($event)"
+      [value]="selectedMonth | date:'yyyy-MM'"
+      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    />
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full border-collapse border border-gray-200 text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left border border-gray-300">Nom</th>
+          <th *ngFor="let day of daysInMonth" class="px-4 py-2 text-center border border-gray-300">{{ day }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let collaborator of collaborators" class="even:bg-gray-50">
+          <td class="px-4 py-2 border border-gray-300">{{ collaborator }}</td>
+          <td *ngFor="let day of daysInMonth" class="px-4 py-2 text-center border border-gray-300"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
