@@ -15,7 +15,6 @@ export class AuthGuard implements CanActivate {
     if (this.isLocalStorageAvailable()) {
       const token = localStorage.getItem('token');
       if (token) {
-        // Token exists, allow access
         return true;
       }
     }
