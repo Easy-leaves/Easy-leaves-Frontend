@@ -22,10 +22,38 @@
       </thead>
       <tbody>
         <tr *ngFor="let collaborator of collaborators" class="even:bg-gray-50">
-          <td class="px-4 py-2 border border-gray-300">{{ collaborator }}</td>
-          <td *ngFor="let day of daysInMonth" class="px-4 py-2 text-center border border-gray-300"></td>
+          <td class="px-4 py-2 border border-gray-300">{{ collaborator.name }}</td>
+          <td *ngFor="let record of collaborator.dailyData" class="px-4 py-2 text-center border border-gray-300" [ngClass]="getAbsenceClass(record)">
+            <!-- {{ record }} 'A' for absence -->
+          </td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+</div>
+
+<div class="flex justify-center">
+  <div class="flex gap-4">
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-blue-300"></span>
+      <span>RTT Employeur</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-green-300"></span>
+      <span>RTT Employé</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-yellow-300"></span>
+      <span>Congé Payé</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-red-300"></span>
+      <span>Congé Sans Solde</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-purple-300"></span>
+      <span>Autre</span>
+    </div>
   </div>
 </div>

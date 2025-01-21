@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UtilisateursService } from '../../services/utilisateurs.service';
 
 @Component({
   selector: 'app-liste-collaborateur',
@@ -8,13 +9,16 @@ import { Component } from '@angular/core';
   templateUrl: './liste-collaborateur.component.html',
   styleUrls: ['./liste-collaborateur.component.css']
 })
-export class ListeCollaborateurComponent {
-  collaborators: string[] = ['Alice', 'Bob', 'Charlie', 'Diana'];
+export class ListeCollaborateurComponent implements OnInit {
+  collaborators: { id: number, name: string, dailyData: string[] }[] = [];
   selectedMonth: Date = new Date();
   daysInMonth: number[] = [];
 
-  constructor() {
+  constructor(private utilisateursService: UtilisateursService) {}
+
+  ngOnInit(): void {
     this.generateDaysOfMonth(this.selectedMonth);
+    this.fetchCollaborators();
   }
 
   generateDaysOfMonth(date: Date) {
@@ -28,5 +32,87 @@ export class ListeCollaborateurComponent {
     const value = (event.target as HTMLInputElement).value;
     this.selectedMonth = new Date(value);
     this.generateDaysOfMonth(this.selectedMonth);
+    this.fetchCollaborators();
   }
+
+  fetchCollaborators() {
+    this.utilisateursService.getUsersByDepartement().subscribe({
+      next: (data) => {
+        this.collaborators = data.map((user: any) => ({
+          id: user.id, // Assuming user.id exists in the response
+          name: `${user.nom} ${user.prenom}`,
+          dailyData: Array(this.daysInMonth.length).fill('') // Initialize empty daily data
+        }));
+
+        this.fetchAbsences();
+      },
+      error: (err) => console.error('Error fetching collaborators:', err),
+    });
+  }
+
+  fetchAbsences() {
+    const month = this.selectedMonth.getMonth() + 1; // 1-based month
+    const year = this.selectedMonth.getFullYear();
+
+    this.collaborators.forEach((collaborator) => {
+      this.utilisateursService.getAbsencesByUser(collaborator.id).subscribe({
+        next: (absences) => {
+          absences.forEach((absence: any) => {
+            const startDate = new Date(absence.dateDebut);
+            const endDate = new Date(absence.dateFin);
+
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+              console.error(`Invalid date range for ${collaborator.name}:`, {
+                dateDebut: absence.dateDebut,
+                dateFin: absence.dateFin,
+              });
+              return;
+            }
+
+            let currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+              if (
+                currentDate.getMonth() + 1 === month &&
+                currentDate.getFullYear() === year
+              ) {
+                const day = currentDate.getDate();
+                const dayIndex = this.daysInMonth.indexOf(day);
+
+                if (dayIndex !== -1) {
+                  // Store the absence type for the day
+                  collaborator.dailyData[dayIndex] = absence.type;
+                }
+              }
+
+              currentDate.setDate(currentDate.getDate() + 1); // Increment day
+            }
+          });
+        },
+        error: (err) =>
+          console.error(
+            `Error fetching absences for user ${collaborator.id}:`,
+            err
+          ),
+      });
+    });
+  }
+
+
+  getAbsenceClass(absenceType: string): string {
+    switch (absenceType) {
+      case 'RTT_EMPLOYEUR':
+        return 'bg-blue-300 text-white'; // Blue for RTT Employeur
+      case 'RTT_EMPLOYE':
+        return 'bg-green-300 text-white'; // Green for RTT Employé
+      case 'CONGE_PAYE':
+        return 'bg-yellow-300 text-black'; // Yellow for Congé Payé
+      case 'CONGE_SANS_SOLDE':
+        return 'bg-red-300 text-white'; // Red for Congé Sans Solde
+      case 'AUTRE':
+        return 'bg-purple-300 text-white'; // Purple for Autre
+      default:
+        return ''; // No absence
+    }
+  }
+
 }
