@@ -1,0 +1,42 @@
+<div class="calendar-container">
+  <div class="calendar-header">
+    <button (click)="changeMonth(-1)">Précédent</button>
+    <h2>{{ monthNames[selectedMonth] }} {{ selectedYear }}</h2>
+    <button (click)="changeMonth(1)">Suivant</button>
+  </div>
+  
+  <table class="calendar">
+    <thead>
+      <tr>
+        <th *ngFor="let day of ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']">{{ day }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let week of chunk(daysInMonth, 7)">
+        <td *ngFor="let day of week">
+          <div class="day" [class.absent]="hasAbsence(day)" [class.holiday]="isHoliday(day)">
+            {{ day }}
+            <div *ngIf="hasAbsence(day)" class="absence-label">
+              Absence
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div style="background-color: #ffcccc;"></div>
+      <span>Absence</span>
+    </div>
+    <div class="legend-item">
+      <div style="background-color: #7a7a7a;"></div>
+      <span>Jour férié</span>
+    </div>
+    <div class="legend-item">
+      <div style="border: 2px solid #007bff; background-color: #d8eaff;"></div>
+      <span>Aujourd'hui</span>
+    </div>
+  </div>
+</div>
