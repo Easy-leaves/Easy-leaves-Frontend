@@ -14,12 +14,28 @@
     <tbody>
       <tr *ngFor="let week of chunk(daysInMonth, 7)">
         <td *ngFor="let day of week">
-          <div class="day" [class.absent]="hasAbsence(day)" [class.holiday]="isHoliday(day)">
+          <div
+            *ngIf="day"
+            class="day"
+            [ngClass]="{
+              'current-day': isToday(day),
+              'holiday': isHoliday(day),
+              'rtt-employeur': getAbsenceType(day) === 'RTT_EMPLOYEUR',
+              'rtt-employe': getAbsenceType(day) === 'RTT_EMPLOYE',
+              'conge-paye': getAbsenceType(day) === 'CONGE_PAYE',
+              'conge-sans-solde': getAbsenceType(day) === 'CONGE_SANS_SOLDE',
+              'autre': getAbsenceType(day) === 'AUTRE'
+            }"
+          >
             {{ day }}
-            <div *ngIf="hasAbsence(day)" class="absence-label">
-              Absence
+            <div *ngIf="getAbsenceType(day)" class="absence-label">
+              {{ getAbsenceType(day) }}
+            </div>
+            <div *ngIf="isHoliday(day)" class="holiday-label">
+              {{ getHolidayName(day) }}
             </div>
           </div>
+          <div *ngIf="!day" class="empty-day"></div>
         </td>
       </tr>
     </tbody>
@@ -27,8 +43,24 @@
 
   <div class="legend">
     <div class="legend-item">
-      <div style="background-color: #ffcccc;"></div>
-      <span>Absence</span>
+      <span class="color-box rtt-employeur"></span>
+      <span>RTT Employeur</span>
+    </div>
+    <div class="legend-item">
+      <span class="color-box rtt-employe"></span>
+      <span>RTT Employé</span>
+    </div>
+    <div class="legend-item">
+      <span class="color-box conge-paye"></span>
+      <span>Congé Payé</span>
+    </div>
+    <div class="legend-item">
+      <span class="color-box conge-sans-solde"></span>
+      <span>Congé Sans Solde</span>
+    </div>
+    <div class="legend-item">
+      <span class="color-box autre"></span>
+      <span>Autre</span>
     </div>
     <div class="legend-item">
       <div style="background-color: #7a7a7a;"></div>

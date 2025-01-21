@@ -10,11 +10,6 @@
   margin-bottom: 20px;
 }
 
-button {
-  padding: 5px 10px;
-  font-size: 16px;
-}
-
 h2 {
   font-size: 24px;
 }
@@ -43,35 +38,12 @@ td {
   position: relative;
 }
 
-/* Absence style */
-.absent {
-  background-color: #ffcccc;
-}
-
-/* Label pour l'absence */
-.absence-label {
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  font-size: 12px;
-  color: red;
-  font-weight: bold;
-}
-
-/* Jour férié */
-.holiday {
-  background-color: #7a7a7a; /* Jaune pour les jours fériés */
-  color: white;
-}
-
-/* Label pour le jour férié */
-.holiday-label {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  font-size: 12px;
-  color: white;
-  font-weight: bold;
+/* Style pour le jour actuel */
+.current-day {
+  border: 2px solid #007bff; /* Bordure bleue */
+  background-color: #eaf4ff; /* Fond bleu clair */
+  color: #007bff; /* Texte bleu */
+  font-weight: bold; /* Texte en gras */
 }
 
 /* Effet au survol des jours */
@@ -86,7 +58,40 @@ td {
   font-weight: bold;
 }
 
+/* Types d'absences */
+.rtt-employeur {
+  background-color: #ffc107; /* Jaune */
+}
+
+.rtt-employe {
+  background-color: #17a2b8; /* Bleu clair */
+}
+
+.conge-paye {
+  background-color: #28a745; /* Vert */
+}
+
+.conge-sans-solde {
+  background-color: #dc3545; /* Rouge */
+}
+
+.autre {
+  background-color: #6c757d; /* Gris */
+}
+
+/* Label pour l'absence */
+.absence-label {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  font-size: 12px;
+  color: white;
+  font-weight: bold;
+}
+
+/* Bouton */
 button {
+  width: 9rem;
   padding: 8px 12px;
   font-size: 16px;
   border: 1px solid #007bff;
@@ -101,6 +106,7 @@ button:hover {
   border-color: #0056b3;
 }
 
+/* Legende */
 .legend {
   display: flex;
   justify-content: center;
@@ -118,4 +124,12 @@ button:hover {
   width: 20px;
   height: 20px;
   border: 1px solid #ddd;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
 }
