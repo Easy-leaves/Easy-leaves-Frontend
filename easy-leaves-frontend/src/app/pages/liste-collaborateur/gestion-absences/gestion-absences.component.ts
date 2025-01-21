@@ -2,8 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CarteAbsenceComponent } from './carte-absence/carte-absence.component';
 import { CommonModule } from '@angular/common';
 import { Statut } from '../../../enums/Statut';
+import {formatDate} from '@angular/common'
 
 import { AbsencesService } from '../../../services/absences.service';
+import { AbsenceView } from './ViewModels/AbsenceView';
+import { AbsenceModel } from './ViewModels/AbsenceModel';
+
+
 
 @Component({
   selector: 'app-gestion-absences',
@@ -14,25 +19,56 @@ import { AbsencesService } from '../../../services/absences.service';
 })
 export class GestionCongeComponent implements OnInit {
   constructor(private absencesServices: AbsencesService) {}
-
-  absences: any[] = [];
+  
+  absences: AbsenceView[] = [];
   
   ngOnInit(): void {
-	// Charger les absences au statut "PENDING"
-	    this.absencesServices.getAbsencesByStatus(Statut.EN_ATTENTE_VALIDATION.toString()).subscribe(
-	      (data) => {
-	        this.absences = data;
-	      },
-	      (error) => {
-	        console.error('Erreur lors du chargement des absences :', error);
-	      }
-	    );
+    this.absencesServices.getAbsencesByStatus(Statut.EN_ATTENTE_VALIDATION).subscribe(
+      (data :AbsenceModel[]) => {
+        this.absences = data.map((absence) => ({
+          idAbsence: absence.idAbsence,
+          dates: formatDate(absence.dateDebut, 'dd/MM/yyyy', 'fr-FR') + " - " + formatDate(absence.dateFin, 'dd/MM/yyy', 'fr-FR'),
+          type: this.getAbsenceType(absence.type),
+          statut: this.getAbsenceStatut(absence.statut),
+          motif: absence.motif,
+          utilisateur: {
+			nom: '',
+			image: '',
+		  },
+        }));
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des absences :', error);
+      }
+    );
   }
 
   // Filtrer les absences par statut
   //getAbsencesFiltrees() {
    // return this.absences.filter(absence => absence.statut === this.statutFiltre);
   //}
+  
+  getAbsenceStatut(statut: string): string{
+  const statutMapping: { [key: string]: string } = {
+      'INITIALE': 'Demande en cours',
+      'EN_ATTENTE_VALIDATION': 'En attente de validation',
+      'REFUSEE': 'Refusée',
+  	  'VALIDEE': 'Validée',
+    };
+    
+    return statutMapping[statut] || 'Autre';
+  }
+  
+  getAbsenceType(type: string): string{
+  const typeMapping: { [key: string]: string } = {
+      'RTT_EMPLOYEUR': 'RTT Employeur',
+      'RTT_EMPLOYE': 'RTT Employé',
+      'CONGE_PAYE': 'Congés payés',
+  	  'CONGE_SANS_SOLDE': 'Congés sans soldes',
+    };
+    
+    return typeMapping[type] || 'Autre';
+  }
   
   // Actions de validation ou refus  
   onValider(absenceId: number): void {
@@ -62,7 +98,7 @@ export class GestionCongeComponent implements OnInit {
 
   // Supprimer une absence de la liste après une action
   private removeAbsenceFromList(id: number): void {
-    this.absences = this.absences.filter((absence) => absence.id !== id);
+    this.absences = this.absences.filter((absence) => absence.idAbsence !== id);
   }
 
 }
