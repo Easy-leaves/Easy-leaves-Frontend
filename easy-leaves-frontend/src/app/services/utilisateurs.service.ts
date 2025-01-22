@@ -25,6 +25,12 @@ export class UtilisateursService {
     );
   }
 
+
+  getPublicHolidays(): Observable<any> {
+    return this.http.get('/jours-feries/metropole.json');
+  }
+
+
   // Error handling method
   private handleError(error: any): Observable<never> {
     console.error('An error occurred:', error);

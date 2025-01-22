@@ -19,6 +19,7 @@ export class ListeCollaborateurComponent implements OnInit {
   ngOnInit(): void {
     this.generateDaysOfMonth(this.selectedMonth);
     this.fetchCollaborators();
+    this.fetchPublicHolidays();
   }
 
   generateDaysOfMonth(date: Date) {
@@ -27,8 +28,8 @@ export class ListeCollaborateurComponent implements OnInit {
     const days = new Date(year, month + 1, 0).getDate();
     this.daysInMonth = Array.from({ length: days }, (_, i) => {
       const dayDate = new Date(year, month, i + 1);
-      const dayLetter = dayDate.toLocaleDateString('fr-FR', { weekday: 'short' })[0].toUpperCase(); // Get first letter of the day
-      return { day: i + 1, letter: dayLetter }; // Include both day and its first letter
+      const dayLetter = dayDate.toLocaleDateString('fr-FR', { weekday: 'short' })[0].toUpperCase();
+      return { day: i + 1, letter: dayLetter };
     });
   }
 
@@ -37,6 +38,7 @@ export class ListeCollaborateurComponent implements OnInit {
     this.selectedMonth = new Date(value);
     this.generateDaysOfMonth(this.selectedMonth);
     this.fetchCollaborators();
+    this.fetchPublicHolidays();
   }
 
   changeMonth(direction: number): void {
@@ -45,6 +47,7 @@ export class ListeCollaborateurComponent implements OnInit {
     this.selectedMonth = newMonth;
     this.generateDaysOfMonth(this.selectedMonth);
     this.fetchCollaborators();
+    this.fetchPublicHolidays();
   }
 
   fetchCollaborators() {
@@ -53,17 +56,18 @@ export class ListeCollaborateurComponent implements OnInit {
         this.collaborators = data.map((user: any) => ({
           id: user.id, // Assuming user.id exists in the response
           name: `${user.nom} ${user.prenom}`,
-          dailyData: Array(this.daysInMonth.length).fill('') // Initialize empty daily data
+          dailyData: Array(this.daysInMonth.length).fill('')
         }));
 
         this.fetchAbsences();
+        this.fetchPublicHolidays();
       },
       error: (err) => console.error('Error fetching collaborators:', err),
     });
   }
 
   fetchAbsences() {
-    const month = this.selectedMonth.getMonth() + 1; // 1-based month
+    const month = this.selectedMonth.getMonth() + 1;
     const year = this.selectedMonth.getFullYear();
 
     this.collaborators.forEach((collaborator) => {
@@ -111,6 +115,32 @@ export class ListeCollaborateurComponent implements OnInit {
   }
 
 
+  fetchPublicHolidays() {
+    this.utilisateursService.getPublicHolidays().subscribe({
+      next: (holidays) => {
+        Object.entries(holidays as Record<string, string>).forEach(([date, name]) => {
+          const holidayDate = new Date(date);
+          if (
+            holidayDate.getMonth() === this.selectedMonth.getMonth() &&
+            holidayDate.getFullYear() === this.selectedMonth.getFullYear()
+          ) {
+            const day = holidayDate.getDate();
+            const dayIndex = this.daysInMonth.findIndex((dayInfo) => dayInfo.day === day);
+
+            if (dayIndex !== -1) {
+              this.collaborators.forEach((collaborator) => {
+                collaborator.dailyData[dayIndex] = 'FERIE'; // Mark as a public holiday
+              });
+            }
+          }
+        });
+      },
+      error: (err) => console.error('Error fetching public holidays:', err),
+    });
+  }
+
+
+
   getAbsenceClass(absenceType: string): string {
     switch (absenceType) {
       case 'RTT_EMPLOYEUR':
@@ -123,6 +153,8 @@ export class ListeCollaborateurComponent implements OnInit {
         return 'bg-red-300 text-white'; // Red for Congé Sans Solde
       case 'AUTRE':
         return 'bg-purple-300 text-white'; // Purple for Autre
+      case 'FERIE':
+        return 'bg-gray-400 text-white'; // Gray for public holidays
       default:
         return '';
     }
