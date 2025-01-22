@@ -12,7 +12,7 @@ import { UtilisateursService } from '../../services/utilisateurs.service';
 export class ListeCollaborateurComponent implements OnInit {
   collaborators: { id: number, name: string, dailyData: string[] }[] = [];
   selectedMonth: Date = new Date();
-  daysInMonth: number[] = [];
+  daysInMonth: any[] = [];
 
   constructor(private utilisateursService: UtilisateursService) {}
 
@@ -25,7 +25,11 @@ export class ListeCollaborateurComponent implements OnInit {
     const year = date.getFullYear();
     const month = date.getMonth();
     const days = new Date(year, month + 1, 0).getDate();
-    this.daysInMonth = Array.from({ length: days }, (_, i) => i + 1);
+    this.daysInMonth = Array.from({ length: days }, (_, i) => {
+      const dayDate = new Date(year, month, i + 1);
+      const dayLetter = dayDate.toLocaleDateString('fr-FR', { weekday: 'short' })[0].toUpperCase(); // Get first letter of the day
+      return { day: i + 1, letter: dayLetter }; // Include both day and its first letter
+    });
   }
 
   onMonthChange(event: Event) {
@@ -84,7 +88,9 @@ export class ListeCollaborateurComponent implements OnInit {
                 currentDate.getFullYear() === year
               ) {
                 const day = currentDate.getDate();
-                const dayIndex = this.daysInMonth.indexOf(day);
+                const dayIndex = this.daysInMonth.findIndex(
+                  (dayInfo) => dayInfo.day === day
+                );
 
                 if (dayIndex !== -1) {
                   collaborator.dailyData[dayIndex] = absence.type;
