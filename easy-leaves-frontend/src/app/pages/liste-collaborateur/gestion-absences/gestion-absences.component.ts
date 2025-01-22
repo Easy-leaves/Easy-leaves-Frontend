@@ -25,8 +25,9 @@ export class GestionCongeComponent implements OnInit {
   ngOnInit(): void {
     this.absencesServices.getAbsencesByStatus(Statut.EN_ATTENTE_VALIDATION).subscribe(
       (data :AbsenceModel[]) => {
+		console.log(data);
         this.absences = data.map((absence) => ({
-          idAbsence: absence.idAbsence,
+          idAbsence: absence.id,
           dates: formatDate(absence.dateDebut, 'dd/MM/yyyy', 'fr-FR') + " - " + formatDate(absence.dateFin, 'dd/MM/yyy', 'fr-FR'),
           type: this.getAbsenceType(absence.type),
           statut: this.getAbsenceStatut(absence.statut),
@@ -35,7 +36,9 @@ export class GestionCongeComponent implements OnInit {
 			nom: '',
 			image: '',
 		  },
-        }));
+        })
+		);
+		console.log(this.absences);
       },
       (error) => {
         console.error('Erreur lors du chargement des absences :', error);
@@ -72,7 +75,7 @@ export class GestionCongeComponent implements OnInit {
   
   // Actions de validation ou refus  
   onValider(absenceId: number): void {
-
+    console.log("Absence Id : ", absenceId);
     this.absencesServices.validateAbsence(absenceId).subscribe(
       () => {
         console.log('Absence validée.');

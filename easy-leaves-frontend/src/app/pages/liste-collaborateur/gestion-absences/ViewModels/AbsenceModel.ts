@@ -1,5 +1,5 @@
 export interface AbsenceModel {
-	idAbsence: number;
+	id: number;
 	dateDebut: Date;
 	dateFin: Date;
 	type: string;

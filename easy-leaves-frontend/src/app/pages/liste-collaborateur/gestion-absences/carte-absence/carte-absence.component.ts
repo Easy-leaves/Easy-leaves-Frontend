@@ -11,15 +11,17 @@ export class CarteAbsenceComponent {
   @Input() utilisateur: { nom: string; image: string } = { nom: '', image: '' };
   @Input() type: string = '';
   @Input() dates: string = '';
+  @Input() idAbsence!: number;
 
-  @Output() valider = new EventEmitter<void>();
-  @Output() refuser = new EventEmitter<void>();
+  @Output() valider = new EventEmitter<number>();
+  @Output() refuser = new EventEmitter<number>();
 
   onValider() {
-    this.valider.emit();
+	console.log("Carte absence Id : " + this.idAbsence);
+    this.valider.emit(this.idAbsence);
   }
 
   onRefuser() {
-    this.refuser.emit();
+    this.refuser.emit(this.idAbsence);
   }
 }
