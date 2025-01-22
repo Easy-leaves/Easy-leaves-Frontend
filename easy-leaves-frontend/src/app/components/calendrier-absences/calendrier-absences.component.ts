@@ -15,14 +15,14 @@ import { Absence } from '../../model/absence';
   styleUrl: './calendrier-absences.component.css'
 })
 export class CalendrierAbsencesComponent {
-  currentDate: Date = new Date(); // Date actuelle
-  daysInMonth: (number | null)[] = []; // Tableau des jours du mois
+  currentDate: Date = new Date();
+  daysInMonth: (number | null)[] = [];
   monthNames: string[] = [
     'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
     'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
   ];
-  selectedMonth: number = this.currentDate.getMonth(); // Mois actuel
-  selectedYear: number = this.currentDate.getFullYear(); // Année actuelle
+  selectedMonth: number = this.currentDate.getMonth();
+  selectedYear: number = this.currentDate.getFullYear();
   absences: Absence[] = [];
   holidays: { [date: string]: string } = {};
 
@@ -104,7 +104,6 @@ export class CalendrierAbsencesComponent {
       this.selectedYear++;
     }
     this.generateDaysInMonth();
-    this.loadHolidays(this.selectedYear);
   }
 
   chunk<T>(arr: T[], size: number): T[][] {
@@ -187,7 +186,20 @@ export class CalendrierAbsencesComponent {
     this.selectedMonth = today.getMonth(); // Mois actuel
     this.selectedYear = today.getFullYear(); // Année actuelle
     this.generateDaysInMonth(); // Regénère les jours du mois
-    this.loadHolidays(this.selectedYear); // Recharge les jours fériés si nécessaire
   }
   
+  onMonthChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const [year, month] = input.value.split('-').map(Number); // Sépare 'yyyy-MM' en [yyyy, MM]
+
+    if (year && month) {
+      this.selectedYear = year;
+      this.selectedMonth = month - 1; // Les mois en JavaScript commencent à 0
+      this.generateDaysInMonth(); // Regénère les jours pour le nouveau mois
+    }
+  }
+
+  get formattedMonth(): string {
+    return `${this.selectedYear}-${(this.selectedMonth + 1).toString().padStart(2, '0')}`;
+  }
 }
