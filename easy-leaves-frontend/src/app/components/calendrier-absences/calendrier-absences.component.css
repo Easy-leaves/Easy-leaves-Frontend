@@ -1,22 +1,5 @@
-.calendar-container {
-  text-align: center;
-  padding: 20px;
-}
-
-.calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
 h2 {
   font-size: 24px;
-}
-
-table.calendar {
-  width: 100%;
-  border-collapse: collapse;
 }
 
 th {
@@ -25,7 +8,7 @@ th {
 }
 
 td {
-  padding: 10px;
+  padding: 0;
   width: 14.28%;
   text-align: center;
   vertical-align: top;
@@ -38,98 +21,90 @@ td {
   position: relative;
 }
 
-/* Style pour le jour actuel */
-.current-day {
-  border: 2px solid #007bff; /* Bordure bleue */
-  background-color: #eaf4ff; /* Fond bleu clair */
-  color: #007bff; /* Texte bleu */
-  font-weight: bold; /* Texte en gras */
-}
-
 /* Effet au survol des jours */
 .day:hover {
   background-color: #f5f5f5;
   transition: background-color 0.3s ease;
+  color: black;
 }
 
-.today {
-  border: 2px solid #007bff; /* Bord bleu pour le jour actuel */
-  background-color: #d8eaff; /* Bleu clair */
-  font-weight: bold;
+.border-yellow-600{
+  border: 1px solid;
 }
 
-/* Types d'absences */
-.rtt-employeur {
-  background-color: #ffc107; /* Jaune */
+.holiday{
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+
+  border-color: rgb(202 138 4 / var(--tw-border-opacity, 1)) /* #ca8a04 */;
+  background-color: rgb(250 204 21 / var(--tw-bg-opacity, 1)) /* #facc15 */;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1)) /* #ffffff */;
+  border-width: 1px;
 }
 
-.rtt-employe {
-  background-color: #17a2b8; /* Bleu clair */
+.rtt-employeur{
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+
+  border-color: rgb(126 34 206 / var(--tw-border-opacity, 1)) /* #7e22ce */;
+  background-color: rgb(168 85 247 / var(--tw-bg-opacity, 1)) /* #a855f7 */;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1)) /* #ffffff */;
+  border-width: 1px;
 }
 
-.conge-paye {
-  background-color: #28a745; /* Vert */
+.rtt-employe{
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+
+  border-color: rgb(67 56 202 / var(--tw-border-opacity, 1)) /* #4338ca */;
+  background-color: rgb(99 102 241 / var(--tw-bg-opacity, 1)) /* #6366f1 */;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1)) /* #ffffff */;
+  border-width: 1px;
 }
 
-.conge-sans-solde {
-  background-color: #dc3545; /* Rouge */
+.conge-paye{
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+
+  border-color: rgb(21 128 61 / var(--tw-border-opacity, 1)) /* #15803d */;
+  background-color: rgb(34 197 94 / var(--tw-bg-opacity, 1)) /* #22c55e */;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1)) /* #ffffff */;
+  border-width: 1px;
 }
 
-.autre {
-  background-color: #6c757d; /* Gris */
+.conge-sans-solde{
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+
+  border-color: rgb(185 28 28 / var(--tw-border-opacity, 1)) /* #b91c1c */;
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1)) /* #ef4444 */;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1)) /* #ffffff */;
+  border-width: 1px;
 }
 
-/* Label pour l'absence */
-.absence-label {
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  font-size: 12px;
-  color: white;
-  font-weight: bold;
+.autre{
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  
+  border-color: rgb(55 65 81 / var(--tw-border-opacity, 1)) /* #374151 */;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity, 1)) /* #6b7280 */;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1)) /* #ffffff */;
+  border-width: 1px;
 }
 
-/* Bouton */
-button {
-  width: 9rem;
-  padding: 8px 12px;
-  font-size: 16px;
-  border: 1px solid #007bff;
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-
-/* Legende */
-.legend {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  gap: 20px;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.legend-item div {
-  width: 20px;
-  height: 20px;
-  border: 1px solid #ddd;
-}
-
-.color-box {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+.today{
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  
+  border-color: rgb(59 130 246 / var(--tw-border-opacity, 1)) /* #3b82f6 */;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity, 1)) /* #dbeafe */;
+  color: rgb(59 130 246 / var(--tw-text-opacity, 1)) /* #3b82f6 */;
+  border-width: 1px;
 }

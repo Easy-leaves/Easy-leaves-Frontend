@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 export class AbsenceService {
 
   private apiUrl = 'http://localhost:8080/absences'; // Remplacez par l'URL de votre backend
-  private apiJourFeriesUrl = 'https://calendrier.api.gouv.fr/jours-feries/';
 
   constructor(private http: HttpClient) {}
 
@@ -18,6 +17,6 @@ export class AbsenceService {
   }
 
   getHolidays(year: number): Observable<any> {
-    return this.http.get<any>(`${this.apiJourFeriesUrl}/jours-feries/metropole/${year}.json`);
+    return this.http.get(`/jours-feries/metropole.json`);
   }
 }

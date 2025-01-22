@@ -160,4 +160,34 @@ export class CalendrierAbsencesComponent {
     const dateKey = new Date(this.selectedYear, this.selectedMonth, day).toISOString().split('T')[0];
     return this.holidays[dateKey] || '';
   }
+
+  getAbsenceLabel(type: string | null): string {
+    if (!type) {
+      return 'Absence'; // Valeur par défaut si le type est null
+    }
+  
+    switch (type) {
+      case 'RTT_EMPLOYEUR':
+        return 'RTT Employeur';
+      case 'RTT_EMPLOYE':
+        return 'RTT Employé';
+      case 'CONGE_PAYE':
+        return 'Congé Payé';
+      case 'CONGE_SANS_SOLDE':
+        return 'Congé Sans Solde';
+      case 'AUTRE':
+        return 'Autre';
+      default:
+        return 'Absence';
+    }
+  }
+
+  goToToday() {
+    const today = new Date();
+    this.selectedMonth = today.getMonth(); // Mois actuel
+    this.selectedYear = today.getFullYear(); // Année actuelle
+    this.generateDaysInMonth(); // Regénère les jours du mois
+    this.loadHolidays(this.selectedYear); // Recharge les jours fériés si nécessaire
+  }
+  
 }
