@@ -19,11 +19,11 @@ export class AbsencesService {
 
     // Valider une absence
     validateAbsence(id: number): Observable<any> {
-      return this.http.put(`${this.apiUrl}/absences/update/${id}/statut`, Statut.VALIDEE);
+      return this.http.put(`${this.apiUrl}/absences/update/${id}/statut`, Statut[Statut.VALIDEE]);
     }
 
     // Refuser une absence
     refuseAbsence(id: number): Observable<any> {
-      return this.http.put(`${this.apiUrl}/absences/update/${id}/statut`, Statut.REFUSEE);
+      return this.http.put(`${this.apiUrl}/absences/update/${id}/statut`, Statut[Statut.REFUSEE]);
     }
 }

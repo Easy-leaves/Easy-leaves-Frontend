@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './carte-absence.component.css'
 })
 export class CarteAbsenceComponent {
-  @Input() utilisateur: { nom: string; image: string } = { nom: '', image: '' };
+  @Input() nom: string ='';
   @Input() type: string = '';
   @Input() dates: string = '';
   @Input() idAbsence!: number;

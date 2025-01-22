@@ -4,5 +4,5 @@ export interface AbsenceView {
   type: string;
   statut: string;
   motif: string;
-  utilisateur: {  nom: string; image: string; };
+  nom: string;
 }
