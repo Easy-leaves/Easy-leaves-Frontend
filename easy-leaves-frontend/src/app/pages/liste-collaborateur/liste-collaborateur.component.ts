@@ -35,6 +35,14 @@ export class ListeCollaborateurComponent implements OnInit {
     this.fetchCollaborators();
   }
 
+  changeMonth(direction: number): void {
+    const newMonth = new Date(this.selectedMonth);
+    newMonth.setMonth(newMonth.getMonth() + direction);
+    this.selectedMonth = newMonth;
+    this.generateDaysOfMonth(this.selectedMonth);
+    this.fetchCollaborators();
+  }
+
   fetchCollaborators() {
     this.utilisateursService.getUsersByDepartement().subscribe({
       next: (data) => {
@@ -79,12 +87,11 @@ export class ListeCollaborateurComponent implements OnInit {
                 const dayIndex = this.daysInMonth.indexOf(day);
 
                 if (dayIndex !== -1) {
-                  // Store the absence type for the day
                   collaborator.dailyData[dayIndex] = absence.type;
                 }
               }
 
-              currentDate.setDate(currentDate.getDate() + 1); // Increment day
+              currentDate.setDate(currentDate.getDate() + 1);
             }
           });
         },
@@ -111,8 +118,7 @@ export class ListeCollaborateurComponent implements OnInit {
       case 'AUTRE':
         return 'bg-purple-300 text-white'; // Purple for Autre
       default:
-        return ''; // No absence
+        return '';
     }
   }
-
 }
