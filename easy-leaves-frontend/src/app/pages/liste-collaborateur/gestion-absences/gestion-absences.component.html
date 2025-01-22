@@ -3,7 +3,7 @@
   <div *ngIf="absences.length > 0; else aucuneDemande">
     <app-carte-absence 
     *ngFor="let absence of absences"
-      [utilisateur]="absence.utilisateur"
+      [nom]="absence.nom"
 	  [idAbsence]="absence.idAbsence"
       [type]="absence.type"
       [dates]="absence.dates"

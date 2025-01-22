@@ -32,10 +32,7 @@ export class GestionCongeComponent implements OnInit {
           type: this.getAbsenceType(absence.type),
           statut: this.getAbsenceStatut(absence.statut),
           motif: absence.motif,
-          utilisateur: {
-			nom: '',
-			image: '',
-		  },
+		  nom: absence.utilisateurNom,
         })
 		);
 		console.log(this.absences);

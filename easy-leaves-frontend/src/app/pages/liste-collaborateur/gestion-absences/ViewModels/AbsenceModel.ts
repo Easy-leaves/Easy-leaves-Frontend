@@ -5,5 +5,5 @@ export interface AbsenceModel {
 	type: string;
 	statut: string;
 	motif: string;
-  utilisateur: {  nom: string; image: string; };
+	utilisateurNom: string;
 }
