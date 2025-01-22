@@ -4,6 +4,7 @@
     <app-carte-absence 
     *ngFor="let absence of absences"
       [utilisateur]="absence.utilisateur"
+	  [idAbsence]="absence.idAbsence"
       [type]="absence.type"
       [dates]="absence.dates"
       (valider)="onValider(absence.idAbsence)"
