@@ -9,12 +9,7 @@ import { CalendrierAbsencesComponent } from '../../components/calendrier-absence
     CommonModule,
     CalendrierAbsencesComponent,
   ],
-  template: `
-    <div class="absences-container">
-      <h1>Calendrier des Absences</h1>
-      <app-calendrier-absences></app-calendrier-absences>
-    </div>
-  `,
+  templateUrl:'./absences.component.html',
   styleUrls: ['./absences.component.css'],
 })
 export class AbsencesComponent {}
