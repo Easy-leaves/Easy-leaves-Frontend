@@ -13,7 +13,7 @@ import { ListeCongesComponent } from './liste-conges/app-liste-conges.component'
 })
 export class ListeCollaborateurComponent {
 	// Propriété pour suivre la vue active
-	  vueActive: string = 'gestionAbsences';
+	  vueActive: string = 'liste';
 
 	  // Méthode pour changer la vue active
 	  changerVue(vue: string) {
