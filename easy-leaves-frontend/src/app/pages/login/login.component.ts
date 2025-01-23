@@ -39,6 +39,13 @@ export class LoginComponent {
         console.log("Result connection : ", response);
         if (response.token) {
           localStorage.setItem('token', response.token);
+  
+          // Décoder le payload du JWT pour extraire l'ID utilisateur
+          const tokenPayload = JSON.parse(atob(response.token.split('.')[1])); // La payload est le deuxième segment du token
+          const userId = tokenPayload.id; // Supposons que l'ID utilisateur est stocké sous la clé 'id'
+          console.log("User ID:", userId);
+  
+          // Redirection ou autre action après connexion réussie
           this.router.navigate(['/']);
         }
       },

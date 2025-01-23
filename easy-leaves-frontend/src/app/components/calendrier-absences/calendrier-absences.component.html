@@ -28,18 +28,18 @@
     </div>
   </div>
   
-  <table class="w-full border-collapse border border-gray-300">
+  <table class="w-full min-h-72 border-collapse border border-gray-300">
     <thead>
       <tr>
         <th class="p-2 bg-gray-100 border border-gray-300 text-center" *ngFor="let day of ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']">{{ day }}</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let week of chunk(daysInMonth, 7)">
-        <td class="text-center align-top cursor-pointer" *ngFor="let day of week">
+      <tr class="h-max" *ngFor="let week of chunk(daysInMonth, 7)">
+        <td class="text-center h-max align-top cursor-pointer" *ngFor="let day of week">
           <div
             *ngIf="day"
-            class="day h-16 relative font-bold"
+            class="day h-16 min-h-16 relative font-bold"
             [ngClass]="{
               'holiday': isHoliday(day),
               'rtt-employeur': getAbsenceType(day) === 'RTT_EMPLOYEUR',
@@ -53,7 +53,7 @@
             {{ day }}
             <div
               *ngIf="hasAbsence(day)"
-              class="absolute bottom-1 right-1 px-2 py-1 text-xs font-semibold rounded shadow !text-white"
+              class="absolute bottom-1 right-1 px-2 py-1 text-xs font-semibold rounded shadow max-2xl:invisible !text-white"
               [ngClass]="{
                 'bg-yellow-600 border-yellow-700': isHoliday(day),
                 'bg-purple-700 border-purple-800': getAbsenceType(day) === 'RTT_EMPLOYEUR',
