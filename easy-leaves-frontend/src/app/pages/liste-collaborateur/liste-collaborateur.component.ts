@@ -54,11 +54,9 @@ export class ListeCollaborateurComponent implements OnInit {
 
   fetchUserConnected(): void {
     const userId = localStorage.getItem("idUser");
-    console.log(userId);
     this.utilisateursService.getUserById(parseInt(userId || '0')).subscribe({
       next: (data) => {
-        console.log(data);
-        this.departementId = 1;
+        this.departementId = data.departement;
         this.fetchCollaborators(this.departementId);
       },
       error: (err) => console.error('Error fetching department:', err),
