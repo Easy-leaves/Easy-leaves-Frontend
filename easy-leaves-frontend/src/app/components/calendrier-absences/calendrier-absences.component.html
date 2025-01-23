@@ -1,0 +1,108 @@
+<div class="text-center p-5">
+  <div class="mb-8">
+    <label for="monthPicker" class="flex justify-center text-xl font-medium text-gray-700 mb-4">
+      Sélectionner le mois et l'année
+    </label>
+    <div class="flex justify-around">
+      <button
+        class="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        aria-label="Mois précédent"
+        (click)="changeMonth(-1)"
+      >
+        Précédent
+      </button>
+      <input
+        id="monthPicker"
+        type="month"
+        (change)="onMonthChange($event)"
+        [value]="formattedMonth | date:'yyyy-MM'"
+        class="mt-1 pl-2 w-1/5 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm capitalize"
+      />
+      <button
+        class="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        aria-label="Mois suivant"
+        (click)="changeMonth(1)"
+      >
+        Suivant
+      </button>
+    </div>
+  </div>
+  
+  <table class="w-full min-h-72 border-collapse border border-gray-300">
+    <thead>
+      <tr>
+        <th class="p-2 bg-gray-100 border border-gray-300 text-center" *ngFor="let day of ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']">{{ day }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="h-max" *ngFor="let week of chunk(daysInMonth, 7)">
+        <td class="text-center h-max align-top cursor-pointer" *ngFor="let day of week">
+          <div
+            *ngIf="day"
+            class="day h-16 min-h-16 relative font-bold"
+            [ngClass]="{
+              'holiday': isHoliday(day),
+              'rtt-employeur': getAbsenceType(day) === 'RTT_EMPLOYEUR',
+              'rtt-employe': getAbsenceType(day) === 'RTT_EMPLOYE',
+              'conge-paye': getAbsenceType(day) === 'CONGE_PAYE',
+              'conge-sans-solde': getAbsenceType(day) === 'CONGE_SANS_SOLDE',
+              'autre': getAbsenceType(day) === 'AUTRE',
+              'today': isToday(day)
+            }"
+          >
+            {{ day }}
+            <div
+              *ngIf="hasAbsence(day)"
+              class="absolute bottom-1 right-1 px-2 py-1 text-xs font-semibold rounded shadow max-2xl:invisible !text-white"
+              [ngClass]="{
+                'bg-yellow-600 border-yellow-700': isHoliday(day),
+                'bg-purple-700 border-purple-800': getAbsenceType(day) === 'RTT_EMPLOYEUR',
+                'bg-indigo-700 border-indigo-800': getAbsenceType(day) === 'RTT_EMPLOYE',
+                'bg-green-700 border-green-800': getAbsenceType(day) === 'CONGE_PAYE',
+                'bg-red-700 border-red-800': getAbsenceType(day) === 'CONGE_SANS_SOLDE',
+                'bg-gray-700 border-gray-800': getAbsenceType(day) === 'AUTRE'
+              }">
+              {{ getAbsenceLabel(getAbsenceType(day)) }}
+            </div>
+            <div *ngIf="isHoliday(day)" class="absolute bottom-1 right-1 px-2 py-1 text-xs font-semibold text-white bg-orange-500 border border-orange-600 rounded shadow">
+              {{ getHolidayName(day) }}
+            </div>
+          </div>
+          <div *ngIf="!day" class="empty-day"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Légende -->
+  <div class="flex justify-center mt-5 gap-4">
+    <div class="flex items-center gap-2">
+      <span class="w-5 h-5 bg-purple-500 border-2 border-purple-700 rounded"></span>
+      <span>RTT Employeur</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-5 h-5 bg-indigo-500 border-2 border-indigo-700 rounded"></span>
+      <span>RTT Employé</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-5 h-5 bg-green-500 border-2 border-green-700 rounded"></span>
+      <span>Congé Payé</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-5 h-5 bg-red-500 border-2 border-red-700 rounded"></span>
+      <span>Congé Sans Solde</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-5 h-5 bg-yellow-400 border-2 border-yellow-600 rounded"></span>
+      <span>Jour férié</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-5 h-5 bg-gray-500 border-2 border-gray-700 rounded"></span>
+      <span>Autre</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-5 h-5 bg-blue-100 border-2 border-blue-500 rounded"></span>
+      <span>Aujourd'hui</span>
+    </div>
+  </div>
+</div>

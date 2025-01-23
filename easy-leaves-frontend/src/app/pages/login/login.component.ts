@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
-import { LoginService } from '../../services/login.service';
+import { LoginService } from '../../services/login/login.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -43,6 +43,8 @@ export class LoginComponent {
           const userId = tokenPayload.id; // Supposons que l'ID utilisateur est stocké sous la clé 'id'
           localStorage.setItem('idUser', userId);
           localStorage.setItem('token', response.token);
+  
+          // Redirection ou autre action après connexion réussie
           this.router.navigate(['/']);
         }
       },

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UtilisateursService } from '../../services/utilisateurs.service';
+import { UtilisateursService } from '../../services/utilisateurs/utilisateurs.service';
 
 @Component({
   selector: 'app-liste-collaborateur',
@@ -156,20 +156,20 @@ export class ListeCollaborateurComponent implements OnInit {
 
 
 
-  getAbsenceClass(absenceType: string): string {
+getAbsenceClass(absenceType: string): string {
     switch (absenceType) {
       case 'RTT_EMPLOYEUR':
-        return 'bg-blue-300 text-white'; // Blue for RTT Employeur
+        return 'bg-purple-500 text-white'; // Blue for RTT Employeur
       case 'RTT_EMPLOYE':
-        return 'bg-green-300 text-white'; // Green for RTT Employé
+        return 'bg-indigo-500 text-white'; // Green for RTT Employé
       case 'CONGE_PAYE':
-        return 'bg-yellow-300 text-black'; // Yellow for Congé Payé
+        return 'bg-green-500 text-white'; // Yellow for Congé Payé
       case 'CONGE_SANS_SOLDE':
-        return 'bg-red-300 text-white'; // Red for Congé Sans Solde
+        return 'bg-red-500 text-white'; // Red for Congé Sans Solde
       case 'AUTRE':
-        return 'bg-purple-300 text-white'; // Purple for Autre
+        return 'bg-gray-500 text-white'; // Purple for Autre
       case 'FERIE':
-        return 'bg-gray-400 text-white'; // Gray for public holidays
+        return 'bg-yellow-400 text-white'; // Gray for public holidays
       default:
         return '';
     }
