@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CarteAbsenceComponent } from './carte-absence/carte-absence.component';
+import { CarteAbsenceComponent } from '../carte-absence/carte-absence.component';
 import { CommonModule } from '@angular/common';
-import { Statut } from '../../../enums/Statut';
+import { Statut } from '../../enums/Statut';
 import {formatDate} from '@angular/common'
 
-import { AbsencesService } from '../../../services/absences.service';
-import { AbsenceView } from './ViewModels/AbsenceView';
-import { AbsenceModel } from './ViewModels/AbsenceModel';
-
-
+import { AbsencesService } from '../../services/absences.service';
+import { AbsenceView } from '../ViewModels/AbsenceView';
+import { AbsenceModel } from '../ViewModels/AbsenceModel';
 
 @Component({
   selector: 'app-gestion-absences',

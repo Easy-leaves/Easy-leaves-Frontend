@@ -1,20 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UtilisateursService } from '../../../services/utilisateurs/utilisateurs.service';
+import { UtilisateursService } from '../../services/utilisateurs/utilisateurs.service';
 
 @Component({
   selector: 'app-liste-conges',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './app-liste-conges.component.html',
-  styleUrl: './app-liste-conges.component.css'
+  templateUrl: './liste-conges.component.html',
+  styleUrl: './liste-conges.component.css'
 })
 export class ListeCongesComponent implements OnInit{
 	collaborators: { id: number, name: string, dailyData: string[] }[] = [];
 	  selectedMonth: Date = new Date();
 	  daysInMonth: any[] = [];
 	  departementId: number = 1;
-
 
 	  constructor(private utilisateursService: UtilisateursService) {}
 
