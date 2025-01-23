@@ -1,0 +1,10 @@
+{
+  "/jours-feries": {
+    "target": "https://calendrier.api.gouv.fr",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/jours-feries": ""
+    }
+  }
+}
