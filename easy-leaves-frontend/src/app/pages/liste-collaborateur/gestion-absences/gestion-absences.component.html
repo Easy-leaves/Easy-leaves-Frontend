@@ -1,3 +1,14 @@
+  <div class="modal-backdrop" *ngIf="isModalOpen">
+    <div class="modal">
+      <h2>Confirmation</h2>
+      <p>Voulez-vous vraiment refuser cette demande ?</p>
+      <div class="modal-actions">
+        <button (click)="closeModal()">Annuler</button>
+        <button class="confirm" (click)="confirmRefus()">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
 <div class="gestion-conge">
   <h1 class="text-4xl font-bold">Gestion des Congés</h1>
   <div *ngIf="absences.length > 0; else aucuneDemande">
@@ -8,7 +19,7 @@
       [type]="absence.type"
       [dates]="absence.dates"
       (valider)="onValider(absence.idAbsence)"
-      (refuser)="onRefuser(absence.idAbsence)">
+      (refuser)="openModal(absence.idAbsence)">
     </app-carte-absence>
   </div>
   <ng-template #aucuneDemande>

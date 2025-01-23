@@ -19,7 +19,8 @@ import { AbsenceModel } from './ViewModels/AbsenceModel';
 })
 export class GestionCongeComponent implements OnInit {
   constructor(private absencesServices: AbsencesService) {}
-  
+  isModalOpen = false;
+  currentAbsenceId: number | null = null;
   absences: AbsenceView[] = [];
   
   ngOnInit(): void {
@@ -84,18 +85,31 @@ export class GestionCongeComponent implements OnInit {
     );
   }
 
-  onRefuser(absenceId: number): void {
-    this.absencesServices.refuseAbsence(absenceId).subscribe(
-      () => {
-        console.log('Absence refusée.');
-        this.removeAbsenceFromList(absenceId);
-      },
-      (error) => {
-        console.error('Erreur lors du refus de l\'absence :', error);
-      }
-    );
-  }
+    openModal(idAbsence: number) {
+      this.currentAbsenceId = idAbsence;
+      this.isModalOpen = true;
+    }
 
+    closeModal() {
+      this.isModalOpen = false;
+      this.currentAbsenceId = null;
+    }
+
+    confirmRefus() {
+      if (this.currentAbsenceId !== null) {
+		this.absencesServices.refuseAbsence(this.currentAbsenceId).subscribe(
+		      () => {
+		        console.log('Absence refusée.');
+		        this.removeAbsenceFromList(this.currentAbsenceId!);
+		      },
+		      (error) => {
+		        console.error('Erreur lors du refus de l\'absence :', error);
+		      }
+		    );
+      }
+      this.closeModal();
+    }
+  
   // Supprimer une absence de la liste après une action
   private removeAbsenceFromList(id: number): void {
     this.absences = this.absences.filter((absence) => absence.idAbsence !== id);
