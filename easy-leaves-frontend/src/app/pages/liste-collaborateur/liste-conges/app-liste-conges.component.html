@@ -1,0 +1,68 @@
+<div class="m-20">
+  <!-- Month Selector -->
+  <div class="mb-8">
+    <label for="monthPicker" class="flex justify-center text-xl font-medium text-gray-700 mb-4">Sélectionner le mois et l'année</label>
+    <div class=" flex justify-around">
+      <button (click)="changeMonth(-1)" class="p-2 bg-blue-500 rounded hover:bg-blue-600 text-white" >Précédent</button>
+      <input
+        id="monthPicker"
+        type="month"
+        (change)="onMonthChange($event)"
+        [value]="selectedMonth | date:'yyyy-MM'"
+        class="mt-1 pl-2 w-1/5 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm capitalize"
+      />
+      <button (click)="changeMonth(1)" class="p-2 bg-blue-500 rounded hover:bg-blue-600 text-white">Suivant</button>
+    </div>
+  </div>
+
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full border-collapse border border-gray-200 text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left border border-gray-300">Nom</th>
+          <th *ngFor="let dayInfo of daysInMonth" class="px-4 py-2 text-center border border-gray-300">
+            {{ dayInfo.day }} {{ dayInfo.letter }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let collaborator of collaborators" class="even:bg-gray-50">
+          <td class="px-4 py-2 border border-gray-300">{{ collaborator.name }}</td>
+          <td *ngFor="let record of collaborator.dailyData" class="px-4 py-2 text-center border border-gray-300" [ngClass]="getAbsenceClass(record)"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="flex justify-center">
+  <div class="flex gap-4">
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-blue-300"></span>
+      <span>RTT Employeur</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-green-300"></span>
+      <span>RTT Employé</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-yellow-300"></span>
+      <span>Congé Payé</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-red-300"></span>
+      <span>Congé Sans Solde</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-gray-400"></span>
+      <span>Férié</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="block w-4 h-4 bg-purple-300"></span>
+      <span>Autre</span>
+    </div>
+  </div>
+</div>
