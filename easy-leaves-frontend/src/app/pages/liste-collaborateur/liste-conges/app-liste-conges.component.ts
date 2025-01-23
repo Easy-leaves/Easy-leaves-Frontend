@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UtilisateursService } from '../../../services/utilisateurs.service';
+import { UtilisateursService } from '../../../services/utilisateurs/utilisateurs.service';
 
 @Component({
   selector: 'app-liste-conges',

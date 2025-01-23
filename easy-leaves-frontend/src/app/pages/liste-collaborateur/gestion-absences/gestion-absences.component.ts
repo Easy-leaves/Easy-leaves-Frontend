@@ -26,28 +26,21 @@ export class GestionCongeComponent implements OnInit {
   ngOnInit(): void {
     this.absencesServices.getAbsencesByStatus(Statut.EN_ATTENTE_VALIDATION).subscribe(
       (data :AbsenceModel[]) => {
-		console.log(data);
-        this.absences = data.map((absence) => ({
-          idAbsence: absence.id,
-          dates: formatDate(absence.dateDebut, 'dd/MM/yyyy', 'fr-FR') + " - " + formatDate(absence.dateFin, 'dd/MM/yyy', 'fr-FR'),
-          type: this.getAbsenceType(absence.type),
-          statut: this.getAbsenceStatut(absence.statut),
-          motif: absence.motif,
-		  nom: absence.utilisateurNom,
-        })
+	        this.absences = data.map((absence) => ({
+	          idAbsence: absence.id,
+	          dates: formatDate(absence.dateDebut, 'dd/MM/yyyy', 'fr-FR') + " - " + formatDate(absence.dateFin, 'dd/MM/yyy', 'fr-FR'),
+	          type: this.getAbsenceType(absence.type),
+	          statut: this.getAbsenceStatut(absence.statut),
+	          motif: absence.motif,
+			  nom: absence.utilisateurNom,
+	        })
 		);
-		console.log(this.absences);
       },
       (error) => {
         console.error('Erreur lors du chargement des absences :', error);
       }
     );
   }
-
-  // Filtrer les absences par statut
-  //getAbsencesFiltrees() {
-   // return this.absences.filter(absence => absence.statut === this.statutFiltre);
-  //}
   
   getAbsenceStatut(statut: string): string{
   const statutMapping: { [key: string]: string } = {
