@@ -11,13 +11,14 @@ export class UtilisateursService {
   constructor(private http: HttpClient) { }
 
   // Method to fetch data for role 1
-  getUsersByDepartement(departementId: number = 1): Observable<any> {
+  getUsersByDepartement(departementId: number): Observable<any> {
     const url = `${this.apiUrl}/utilisateurs/departement/${departementId}`;
     return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
   }
 
+  // Method to get Absences by User id
   getAbsencesByUser(userId: number): Observable<any> {
     const url = `${this.apiUrl}/absences/utilisateur/${userId}`;
     return this.http.get<any>(url).pipe(
@@ -25,7 +26,16 @@ export class UtilisateursService {
     );
   }
 
+  // Method to get User by their id
+  getUserById(userId: number): Observable<any> {
+    const url = `${this.apiUrl}/utilisateurs/${userId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
 
+  // Method to get Public Holidays from API (but not use cause don't work every time)
+  // ---------- REWORK ----------
   getPublicHolidays(): Observable<any> {
     return this.http.get('/jours-feries/metropole.json');
   }

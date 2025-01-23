@@ -13,13 +13,15 @@ export class ListeCollaborateurComponent implements OnInit {
   collaborators: { id: number, name: string, dailyData: string[] }[] = [];
   selectedMonth: Date = new Date();
   daysInMonth: any[] = [];
+  departementId: number = 1;
+
 
   constructor(private utilisateursService: UtilisateursService) {}
 
   ngOnInit(): void {
     this.generateDaysOfMonth(this.selectedMonth);
-    this.fetchCollaborators();
-    this.fetchPublicHolidays();
+    this.fetchUserConnected();
+    // this.fetchPublicHolidays();
   }
 
   generateDaysOfMonth(date: Date) {
@@ -37,8 +39,8 @@ export class ListeCollaborateurComponent implements OnInit {
     const value = (event.target as HTMLInputElement).value;
     this.selectedMonth = new Date(value);
     this.generateDaysOfMonth(this.selectedMonth);
-    this.fetchCollaborators();
-    this.fetchPublicHolidays();
+    this.fetchCollaborators(this.departementId);
+    // this.fetchPublicHolidays();
   }
 
   changeMonth(direction: number): void {
@@ -46,21 +48,35 @@ export class ListeCollaborateurComponent implements OnInit {
     newMonth.setMonth(newMonth.getMonth() + direction);
     this.selectedMonth = newMonth;
     this.generateDaysOfMonth(this.selectedMonth);
-    this.fetchCollaborators();
-    this.fetchPublicHolidays();
+    this.fetchCollaborators(this.departementId);
+    // this.fetchPublicHolidays();
   }
 
-  fetchCollaborators() {
-    this.utilisateursService.getUsersByDepartement().subscribe({
+  fetchUserConnected(): void {
+    const userId = localStorage.getItem("idUser");
+    console.log(userId);
+    this.utilisateursService.getUserById(parseInt(userId || '0')).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.departementId = 1;
+        this.fetchCollaborators(this.departementId);
+      },
+      error: (err) => console.error('Error fetching department:', err),
+    });
+  }
+
+
+  fetchCollaborators(idDepartement: number) {
+    this.utilisateursService.getUsersByDepartement(idDepartement).subscribe({
       next: (data) => {
         this.collaborators = data.map((user: any) => ({
-          id: user.id, // Assuming user.id exists in the response
+          id: user.id,
           name: `${user.nom} ${user.prenom}`,
           dailyData: Array(this.daysInMonth.length).fill('')
         }));
 
         this.fetchAbsences();
-        this.fetchPublicHolidays();
+        // this.fetchPublicHolidays();
       },
       error: (err) => console.error('Error fetching collaborators:', err),
     });
@@ -115,6 +131,7 @@ export class ListeCollaborateurComponent implements OnInit {
   }
 
 
+  // DO NOT USE NOW CAUSE SOMETIMES IT DOES NOT WORK
   fetchPublicHolidays() {
     this.utilisateursService.getPublicHolidays().subscribe({
       next: (holidays) => {
@@ -129,7 +146,7 @@ export class ListeCollaborateurComponent implements OnInit {
 
             if (dayIndex !== -1) {
               this.collaborators.forEach((collaborator) => {
-                collaborator.dailyData[dayIndex] = 'FERIE'; // Mark as a public holiday
+                collaborator.dailyData[dayIndex] = 'FERIE';
               });
             }
           }
