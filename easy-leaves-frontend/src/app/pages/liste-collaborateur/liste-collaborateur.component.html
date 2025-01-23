@@ -6,7 +6,8 @@
 
 <div class="contenu">
   <!-- Affiche Gestion des Absences si vueActive est 'gestionAbsences' -->
-  <app-gestion-absences *ngIf="vueActive === 'gestionAbsences'"></app-gestion-absences>
+  <app-liste-conges *ngIf="vueActive === 'liste'"/>
+  <app-gestion-absences *ngIf="vueActive === 'gestionAbsences'"/>
 
   <!-- Affiche une autre section si vueActive est 'autreOption' -->
   <div *ngIf="vueActive !== 'gestionAbsences'">
