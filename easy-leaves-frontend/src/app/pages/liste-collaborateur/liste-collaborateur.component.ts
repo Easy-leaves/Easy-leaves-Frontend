@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GestionCongeComponent } from './gestion-absences/gestion-absences.component';
-import { ListeCongesComponent } from './liste-conges/app-liste-conges.component';
-
+import { GestionCongeComponent } from '../../components/gestion-absences/gestion-absences.component';
+import { ListeCongesComponent } from '../../components/liste-conges/liste-conges.component';
 
 @Component({
   selector: 'app-liste-collaborateur',
