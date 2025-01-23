@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AbsenceService } from '../../services/absence/absence.service';
 import { Absence } from '../../model/absence';
+import { UtilisateursService } from '../../services/utilisateurs/utilisateurs.service';
 
 @Component({
   selector: 'app-calendrier-absences',
@@ -28,10 +29,11 @@ export class CalendrierAbsencesComponent {
 
   constructor(
     private absenceService: AbsenceService,
+    private utilisateursService: UtilisateursService
   ) {}
 
   ngOnInit() {
-    this.loadAbsences(21);
+    this.loadAbsences(parseInt(localStorage.getItem("idUser") || '0'));
     this.loadHolidays(this.selectedYear);
     this.generateDaysInMonth();
   }
