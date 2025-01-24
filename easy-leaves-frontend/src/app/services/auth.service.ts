@@ -9,6 +9,6 @@ export class AuthService {
     // Exemple de méthode pour obtenir l'ID de l'utilisateur authentifié
     getAuthenticatedUserId(): number {
         // Remplacez cette implémentation par la logique réelle
-        return 21; // Par exemple, l'utilisateur avec l'ID 1
+        return 21; // Par exemple, l'utilisateur avec l'ID 21
     }
 }
