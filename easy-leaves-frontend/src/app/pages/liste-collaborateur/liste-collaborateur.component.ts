@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GestionCongeComponent } from '../../components/gestion-absences/gestion-absences.component';
 import { ListeCongesComponent } from '../../components/liste-conges/liste-conges.component';
+import { HistogrammeCongesComponent } from '../../components/histogramme-conges/histogramme-conges.component';
 
 @Component({
   selector: 'app-liste-collaborateur',
   standalone: true,
-  imports: [CommonModule, GestionCongeComponent, ListeCongesComponent],
+  imports: [CommonModule, GestionCongeComponent, ListeCongesComponent, HistogrammeCongesComponent],
   templateUrl: './liste-collaborateur.component.html',
   styleUrls: ['./liste-collaborateur.component.css']
 })

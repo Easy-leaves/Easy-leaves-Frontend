@@ -1,0 +1,21 @@
+<div class="m-10">
+  <!-- Week Selector -->
+  <div class="mb-8 flex justify-around items-center">
+    <button (click)="changeWeek(-1)" class="p-2 bg-blue-500 rounded hover:bg-blue-600 text-white">Précédent</button>
+
+    <div class="text-center">
+      <p class="text-xl font-medium">
+        Semaine du
+        {{ selectedWeek?.startDate | date: 'dd/MM/yyyy' }} au
+        {{ selectedWeek?.endDate | date: 'dd/MM/yyyy' }}
+      </p>
+    </div>
+
+    <button (click)="changeWeek(1)" class="p-2 bg-blue-500 rounded hover:bg-blue-600 text-white">Suivant</button>
+  </div>
+
+  <!-- Chart -->
+  <div>
+    <canvas id="absenceChart"></canvas>
+  </div>
+</div>
