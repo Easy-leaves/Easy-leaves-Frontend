@@ -17,6 +17,11 @@ export class AbsencesService {
       return this.http.get<any[]>(`${this.apiUrl}/absences/statut/${statut}`, { headers: this.headers, withCredentials: true });
     }
 
+    // Récupérer la liste des absences en fonction du type
+    getAbsencesByType(type: string): Observable<any> {
+      return this.http.get<any[]>(`${this.apiUrl}/absences/type/${type}`, { headers: this.headers, withCredentials: true });
+    }
+
     // Valider une absence
     validateAbsence(id: number): Observable<any> {
       return this.http.put(`${this.apiUrl}/absences/update/${id}/statut`, Statut[Statut.VALIDEE]);

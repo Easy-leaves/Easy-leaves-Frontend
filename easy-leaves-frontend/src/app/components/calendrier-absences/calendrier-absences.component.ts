@@ -34,7 +34,7 @@ export class CalendrierAbsencesComponent {
 
   ngOnInit() {
     this.loadAbsences(parseInt(localStorage.getItem("idUser") || '0'));
-    this.loadHolidays(this.selectedYear);
+    /*this.loadHolidays(this.selectedYear);*/
     this.generateDaysInMonth();
   }
 
@@ -140,7 +140,7 @@ export class CalendrierAbsencesComponent {
     );
   }
 
-  loadHolidays(year: number) {
+  /*loadHolidays(year: number) {
     this.absenceService.getHolidays(year).subscribe((data) => {
       // Convertir les dates en clés (format ISO 8601 simplifié : YYYY-MM-DD)
       this.holidays = {};
@@ -149,7 +149,7 @@ export class CalendrierAbsencesComponent {
         this.holidays[holidayDate] = data[date]; // Ajouter le nom du jour férié
       }
     });
-  }
+  }*/
 
   isHoliday(day: number): boolean {
     // Construire la date à partir de l'année, du mois et du jour sélectionnés
