@@ -1,0 +1,79 @@
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Gestion des Absences</h1>
+
+    <!-- Formulaire pour ajouter une nouvelle absence -->
+    <form class="mb-6" (ngSubmit)="submitAbsence()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block font-medium mb-2">Date de début</label>
+                <input type="date" [(ngModel)]="newAbsence.dateDebut" name="dateDebut" class="w-full border rounded p-2"
+                    required />
+            </div>
+            <div>
+                <label class="block font-medium mb-2">Date de fin</label>
+                <input type="date" [(ngModel)]="newAbsence.dateFin" name="dateFin" class="w-full border rounded p-2"
+                    required />
+            </div>
+            <div>
+                <label class="block font-medium mb-2">Type d'absence</label>
+                <select [(ngModel)]="newAbsence.type" name="type" class="w-full border rounded p-2" required>
+                    <option value="" disabled selected>Sélectionnez un type</option>
+                    <option value="Congé payé">Congé payé</option>
+                    <option value="Congé sans solde">Congé Sans Solde</option>
+                    <option value="RTT EMPLOYEUR">RTT EMPLOYEUR</option>
+                    <option value="RTT EMPLOYE">RTT EMPLOYE</option>
+                    <option value="AUTRE">AUTRE</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-medium mb-2">Motif (optionnelle)</label>
+                <input type="text" [(ngModel)]="newAbsence.motif" name="motif" class="w-full border rounded p-2" />
+            </div>
+        </div>
+        <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Ajouter une absence
+        </button>
+    </form>
+
+    <!-- Tableau des absences -->
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="p-4 border border-gray-300">Date de début</th>
+                    <th class="p-4 border border-gray-300">Date de fin</th>
+                    <th class="p-4 border border-gray-300">Motif</th>
+                    <th class="p-4 border border-gray-300">Type</th>
+                    <th class="p-4 border border-gray-300">Statut</th>
+                    <th class="p-4 border border-gray-300">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let absence of absences" class="odd:bg-gray-100">
+                    <td class="p-4 border border-gray-300">{{ absence.dateDebut | date: 'yyyy-MM-dd' }}</td>
+                    <td class="p-4 border border-gray-300">{{ absence.dateFin | date: 'yyyy-MM-dd' }}</td>
+                    <td class="p-4 border border-gray-300">{{ absence.motif }}</td>
+                    <td class="p-4 border border-gray-300">{{ absence.type }}</td>
+                    <td class="p-4 border border-gray-300">
+                        <span [ngClass]="{
+                  'text-green-500': absence.statut === 'Approuvé',
+                  'text-yellow-500': absence.statut === 'En attente',
+                  'text-red-500': absence.statut === 'Refusé'
+                }">
+                            {{ absence.statut }}
+                        </span>
+                    </td>
+                    <td class="p-4 border border-gray-300">
+                        <button (click)="deleteAbsence(absence.id)" class="btn btn-danger">Supprimer</button>
+                        <button (click)="openEditDialog(absence)"
+                            class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                            Modifier
+                        </button>
+
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
