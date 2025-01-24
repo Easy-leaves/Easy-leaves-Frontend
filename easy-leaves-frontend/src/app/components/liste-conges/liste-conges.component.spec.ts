@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppListeCongesComponent } from './app-liste-conges.component';
+import { ListeCongesComponent } from './liste-conges.component';
 
-describe('AppListeCongesComponent', () => {
-  let component: AppListeCongesComponent;
-  let fixture: ComponentFixture<AppListeCongesComponent>;
+describe('ListeCongesComponent', () => {
+  let component: ListeCongesComponent;
+  let fixture: ComponentFixture<ListeCongesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppListeCongesComponent]
+      imports: [ListeCongesComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(AppListeCongesComponent);
+    fixture = TestBed.createComponent(ListeCongesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

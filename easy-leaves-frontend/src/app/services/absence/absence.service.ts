@@ -16,7 +16,7 @@ export class AbsenceService {
     return this.http.get<any[]>(`${this.apiUrl}/utilisateur/${idUtilisateur}`);
   }
 
-  getHolidays(year: number): Observable<any> {
-    return this.http.get(`/jours-feries/metropole.json`);
+  getAbsencesByType(type: String): Observable<any> {
+    return this.http.get<any[]>(`${this.apiUrl}/type/${type}`);
   }
 }
