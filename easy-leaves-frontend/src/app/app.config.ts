@@ -6,7 +6,7 @@ import { provideHttpClient, HTTP_INTERCEPTORS, withInterceptors } from '@angular
 import { routes } from './app.routes';
 import { AuthGuard } from './guard/auth.guard';
 import { authInterceptor } from './interceptor/auth.interceptor';
-import { EditAbsenceDialogComponent } from './pages/edit-absence-dialog/edit-absence-dialog.component';
+import { EditAbsenceDialogComponent } from './components/edit-absence-dialog/edit-absence-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
