@@ -36,3 +36,23 @@ th {
 button {
     cursor: pointer;
 }
+
+.btn {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
