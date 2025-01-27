@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UtilisateursService } from '../../services/utilisateurs/utilisateurs.service';
 import { Chart, registerables } from 'chart.js';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-histogramme-conges',
@@ -236,5 +237,36 @@ export class HistogrammeCongesComponent implements OnInit {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+
+  exportToExcel(): void {
+    // Prepare data for Excel export
+    const exportData = Object.keys(this.absencesByDay).map((day, index) => {
+      // Get the date for the day
+      const startDate = new Date(this.selectedWeek!.startDate);
+      const dayDate = new Date(startDate.setDate(startDate.getDate() + index));
+      const formattedDate = `${dayDate.getDate().toString().padStart(2, '0')}/${(dayDate.getMonth() + 1).toString().padStart(2, '0')}`;
+
+      // Prepare the row data
+      const absences = this.absencesByDay[day]
+        .map((absence) => `${absence.name} (${absence.color})`)
+        .join(', ');
+
+      return {
+        Day: day,
+        Date: formattedDate,
+        Absences: absences,
+      };
+    });
+
+    // Convert data to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+    // Create a workbook and add the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Histogram Data');
+
+    // Export the workbook as an Excel file
+    XLSX.writeFile(workbook, 'histogramme_absences.xlsx');
   }
 }

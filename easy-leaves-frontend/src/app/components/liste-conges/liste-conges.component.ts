@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UtilisateursService } from '../../services/utilisateurs/utilisateurs.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-liste-conges',
@@ -171,4 +172,30 @@ export class ListeCongesComponent implements OnInit{
 	        return '';
 	    }
 	  }
+
+
+    exportToExcel(): void {
+      // Prepare data for export
+      const exportData = this.collaborators.map((collaborator) => {
+        const row: { [key: string]: string | number } = { Collaborator: collaborator.name };
+        this.daysInMonth.forEach((day, index) => {
+          row[`${day.day} ${day.letter}`] = collaborator.dailyData[index] || '-';
+        });
+        return row;
+      });
+
+      // Convert data to a worksheet
+      const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+      // Add headers for each day of the month
+      const headers = ['Collaborator', ...this.daysInMonth.map((day) => `${day.day} ${day.letter}`)];
+      XLSX.utils.sheet_add_aoa(worksheet, [headers], { origin: 'A1' });
+
+      // Create a workbook and append the worksheet
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Liste des Congés');
+
+      // Export the workbook as an Excel file
+      XLSX.writeFile(workbook, 'liste_conges.xlsx');
+    }
 }
