@@ -146,16 +146,17 @@ export class HistogrammeCongesComponent implements OnInit {
           borderWidth: 1,
         };
       })
-      .filter((dataset) => dataset !== null); // Remove null datasets
+      .filter((dataset) => dataset !== null);
 
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: Object.keys(this.absencesByDay), // Days of the week in French
+        labels: Object.keys(this.absencesByDay),
         datasets: datasets as any[],
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false, // Allow custom width/height
         plugins: {
           legend: {
             display: true,
@@ -178,12 +179,14 @@ export class HistogrammeCongesComponent implements OnInit {
         },
         scales: {
           x: {
+            stacked: true,
             title: {
               display: true,
               text: 'Jours de la semaine',
             },
           },
           y: {
+            stacked: true,
             title: {
               display: true,
               text: 'Nombre d’absences',
