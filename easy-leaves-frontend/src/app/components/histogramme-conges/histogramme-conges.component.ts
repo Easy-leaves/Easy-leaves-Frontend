@@ -22,10 +22,10 @@ export class HistogrammeCongesComponent implements OnInit {
     Dimanche: [],
   };
   selectedWeek: { startDate: Date; endDate: Date } | null = null;
-  userColors: { [userId: number]: string } = {}; // Unique color per user
+  userColors: { [userId: number]: string } = {};
 
   constructor(private utilisateursService: UtilisateursService) {
-    Chart.register(...registerables); // Register Chart.js modules
+    Chart.register(...registerables);
   }
 
   ngOnInit(): void {
@@ -36,20 +36,20 @@ export class HistogrammeCongesComponent implements OnInit {
   initializeWeek(): void {
     const now = new Date();
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay() + 1); // Start on Monday
+    startOfWeek.setDate(now.getDate() - now.getDay() + 1);
     const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6); // End on Sunday
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
 
     this.selectedWeek = { startDate: startOfWeek, endDate: endOfWeek };
   }
 
   fetchAbsenceData(): void {
-    const departementId = 1; // Replace with dynamic value if needed
+    const departementId = 1;
     this.utilisateursService.getUsersByDepartement(departementId).subscribe({
       next: (users) => {
         users.forEach((user: any) => {
           if (!this.userColors[user.id]) {
-            this.userColors[user.id] = this.getRandomColor(); // Assign a random color
+            this.userColors[user.id] = this.getRandomColor();
           }
 
           this.utilisateursService.getAbsencesByUser(user.id).subscribe({
@@ -67,7 +67,7 @@ export class HistogrammeCongesComponent implements OnInit {
 
   processAbsences(absences: any[], user: any): void {
     if (!absences.length && user.nom.startsWith('User')) {
-      return; // Skip users with no absences and default "User" names
+      return;
     }
 
     const weekAbsences = absences.filter((absence) => {
@@ -123,24 +123,39 @@ export class HistogrammeCongesComponent implements OnInit {
 
   generateChart(): void {
     if (this.chart) {
-      this.chart.destroy(); // Destroy existing chart before re-rendering
+      this.chart.destroy();
     }
 
     const ctx = document.getElementById('absenceChart') as HTMLCanvasElement;
 
-    // Prepare dataset for stacked bar chart
+    // Generate labels with day names and dates
+    const labels = Object.keys(this.absencesByDay).map((day, index) => {
+      // Calculate the corresponding date for each day of the selected week
+      const startDate = new Date(this.selectedWeek!.startDate);
+      const dayDate = new Date(startDate.setDate(startDate.getDate() + index)); // Adjust day
+
+      // Format the label to include day name and date (e.g., "Lundi\n22/01")
+      return `${day}\n${dayDate.getDate().toString().padStart(2, '0')}/${(dayDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}`;
+    });
+
+    // Prepare datasets for the stacked bar chart
     const datasets = Object.keys(this.userColors)
       .map((userId) => {
         const userName = Object.values(this.absencesByDay)
           .flat()
           .find((absence) => absence.color === this.userColors[+userId])?.name;
 
-        if (!userName) return null; // Skip if user has no absences
+        if (!userName) return null;
 
         return {
           label: userName,
           data: Object.keys(this.absencesByDay).map(
-            (day) => this.absencesByDay[day].filter((absence) => absence.color === this.userColors[+userId]).length
+            (day) =>
+              this.absencesByDay[day].filter(
+                (absence) => absence.color === this.userColors[+userId]
+              ).length
           ),
           backgroundColor: this.userColors[+userId],
           borderWidth: 1,
@@ -148,10 +163,11 @@ export class HistogrammeCongesComponent implements OnInit {
       })
       .filter((dataset) => dataset !== null);
 
+    // Render the chart
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: Object.keys(this.absencesByDay),
+        labels,
         datasets: datasets as any[],
       },
       options: {
@@ -184,12 +200,19 @@ export class HistogrammeCongesComponent implements OnInit {
               display: true,
               text: 'Jours de la semaine',
             },
+            ticks: {
+              callback: function (value: any, index: number, values: any) {
+                // Adjust the X-axis ticks to display multiline labels (day name and date)
+                const label = labels[index];
+                return label;
+              },
+            },
           },
           y: {
             stacked: true,
             title: {
               display: true,
-              text: 'Nombre d’absences',
+              text: 'Nombre total d’absences',
             },
             beginAtZero: true,
             ticks: {
@@ -200,6 +223,7 @@ export class HistogrammeCongesComponent implements OnInit {
       },
     });
   }
+
 
   capitalize(word: string): string {
     return word.charAt(0).toUpperCase() + word.slice(1);
