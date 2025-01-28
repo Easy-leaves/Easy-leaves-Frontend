@@ -16,7 +16,7 @@ export class HistogrammeCongesComponent implements OnInit {
   absencesByDay: { [day: string]: { name: string; color: string }[] } = this.initializeAbsencesByDay();
   selectedWeek: { startDate: Date; endDate: Date } | null = null;
   userColors: { [userId: number]: string } = {};
-  departementId: number = 1;
+  departementId: number = 0;
 
   constructor(private utilisateursService: UtilisateursService) {
     Chart.register(...registerables);
