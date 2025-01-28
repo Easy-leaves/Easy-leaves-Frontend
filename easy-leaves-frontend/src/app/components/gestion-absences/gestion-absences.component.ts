@@ -76,30 +76,30 @@ export class GestionCongeComponent implements OnInit {
     );
   }
 
-    openModal(idAbsence: number) {
-      this.currentAbsenceId = idAbsence;
-      this.isModalOpen = true;
-    }
+  openModal(idAbsence: number) {
+    this.currentAbsenceId = idAbsence;
+    this.isModalOpen = true;
+  }
 
-    closeModal() {
-      this.isModalOpen = false;
-      this.currentAbsenceId = null;
-    }
+  closeModal() {
+    this.isModalOpen = false;
+    this.currentAbsenceId = null;
+  }
 
-    confirmRefus() {
-      if (this.currentAbsenceId !== null) {
-		this.absencesServices.refuseAbsence(this.currentAbsenceId).subscribe(
-		      () => {
-		        console.log('Absence refusée.');
-		        this.removeAbsenceFromList(this.currentAbsenceId!);
-		      },
-		      (error) => {
-		        console.error('Erreur lors du refus de l\'absence :', error);
-		      }
-		    );
-      }
-      this.closeModal();
+  confirmRefus() {
+    if (this.currentAbsenceId !== null) {
+  this.absencesServices.refuseAbsence(this.currentAbsenceId).subscribe(
+        () => {
+          console.log('Absence refusée.');
+          this.removeAbsenceFromList(this.currentAbsenceId!);
+        },
+        (error) => {
+          console.error('Erreur lors du refus de l\'absence :', error);
+        }
+      );
     }
+    this.closeModal();
+  }
   
   // Supprimer une absence de la liste après une action
   private removeAbsenceFromList(id: number): void {

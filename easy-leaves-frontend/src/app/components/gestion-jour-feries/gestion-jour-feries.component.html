@@ -1,27 +1,39 @@
 <div class="p-8 bg-gray-100 min-h-screen">
+    <!-- Messages de succès -->
+    <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
+        <span class="block sm:inline">{{ successMessage }}</span>
+    </div>
+    <!-- Tableau des jours fériés -->
     <section class="overflow-x-auto bg-white shadow-lg rounded-lg p-6">
-        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8">
-            Gestion des Jours Fériés
-        </h1>
+        <div class="flex justify-center flex-col">
+            <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8">Gestion des Jours Fériés</h1>
+            <button
+            class="bg-green-600 hover:bg-green-700 px-4 py-2 w-72 self-center mb-4 rounded text-white font-bold flex items-center justify-center shadow-md transition"
+            (click)="openAddModal()"
+            title="Ajouter un jour férié"
+          >
+            Ajouter un jour férié
+          </button>
+        </div>
         <table class="min-w-full table-auto border border-gray-300 rounded-lg overflow-hidden">
             <thead>
-              <tr class="bg-blue-600 text-white">
-                <th class="px-6 py-3 text-left font-semibold">Nom du Jour</th>
-                <th class="px-6 py-3 text-left font-semibold">Date</th>
-                <th class="px-6 py-3 text-center font-semibold">Action</th>
-              </tr>
+                <tr class="bg-blue-600 text-white">
+                    <th class="px-6 py-3 text-left font-semibold">Nom du Jour</th>
+                    <th class="px-6 py-3 text-left font-semibold">Date</th>
+                    <th class="px-6 py-3 text-center font-semibold">Action</th>
+                </tr>
             </thead>
             <tbody class="bg-gray-50 divide-y divide-gray-300">
                 <tr *ngFor="let holiday of holidays" class="hover:bg-blue-50 transition">
                     <td class="px-6 py-4 text-gray-700">{{ holiday.motif }}</td>
                     <td class="px-6 py-4 text-gray-700">{{ holiday.dates }}</td>
                     <td class="px-6 py-4 text-center">
-                        <button 
+                        <button
                             class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition mr-2"
                             (click)="openEditModal(holiday)">
                             Modifier
                         </button>
-                        <button 
+                        <button
                             class="bg-red-500 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
                             (click)="openDeleteModal(holiday)">
                             Supprimer
@@ -41,6 +53,10 @@
         <h2 class="text-xl font-semibold text-gray-800 mb-4">
             Confirmation
         </h2>
+        <!-- Messages d'erreur -->
+        <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
+            <span class="block sm:inline">{{ errorMessage }}</span>
+        </div>
         <p class="text-gray-600 mb-6">
             Voulez-vous vraiment supprimer ce jour férié ?
         </p>
@@ -67,6 +83,10 @@
         <h2 class="text-xl font-semibold text-gray-800 mb-4">
             Modifier les informations
         </h2>
+        <!-- Messages d'erreur -->
+        <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
+            <span class="block sm:inline">{{ errorMessage }}</span>
+        </div>
         <form (ngSubmit)="submitEdit()">
             <div class="mb-4">
                 <label for="nomJour" class="block text-gray-700 font-medium mb-2">Nom du Jour</label>
@@ -109,4 +129,55 @@
         </form>
     </div>
 </div>
-
+<div
+  class="modal-backdrop fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+  *ngIf="isAddModalOpen"
+>
+  <div class="modal bg-white rounded-lg shadow-lg w-96 p-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Ajouter un Jour Férié</h2>
+    <!-- Messages d'erreur -->
+    <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
+        <span class="block sm:inline">{{ errorMessage }}</span>
+    </div>
+    <form (ngSubmit)="submitAdd()">
+      <div class="mb-4">
+        <label for="nomJour" class="block text-gray-700 font-medium mb-2">Nom du Jour</label>
+        <input
+          id="nomJour"
+          type="text"
+          [(ngModel)]="newHoliday.motif"
+          name="motif"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Entrez le nom du jour"
+          required
+        />
+      </div>
+      <div class="mb-6">
+        <label for="date" class="block text-gray-700 font-medium mb-2">Date</label>
+        <input
+          id="date"
+          type="date"
+          [(ngModel)]="newHoliday.dateDebut"
+          name="dateDebut"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          required
+        />
+      </div>
+      <div class="modal-actions flex justify-end space-x-4">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded transition"
+          (click)="closeModal()"
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded transition"
+        >
+          Ajouter
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
