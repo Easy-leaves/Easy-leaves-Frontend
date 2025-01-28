@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog'
 import { EditAbsenceDialogComponent } from '../edit-absence-dialog/edit-absence-dialog.component';
+import { Statut } from '../../enums/Statut';
 
 @Component({
   selector: 'app-demande-absence',
@@ -22,9 +23,8 @@ export class DemandeAbsenceComponent implements OnInit {
     dateFin: '',
     type: '',
     motif: '',
-
   };
-  userId!: number; // ID de l'utilisateur authentifié
+  userId: string | null = null;
 
   editing: boolean = false;
   currentAbsence: any = {};
@@ -38,7 +38,7 @@ export class DemandeAbsenceComponent implements OnInit {
     'Autre': 'AUTRE',
   } as const;
 
-  constructor(private absenceService: AbsenceService, private authService: AuthService, private dialog: MatDialog) { }
+  constructor(private absenceService: AbsenceService, private dialog: MatDialog) { }
 
   openEditDialog(absence: any): void {
     const dialogRef = this.dialog.open(EditAbsenceDialogComponent, {
@@ -60,20 +60,21 @@ export class DemandeAbsenceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userId = this.authService.getAuthenticatedUserId(); // Exemple d'appel au service d'auth
-    this.loadAbsences();
-    console.log('Authent', this.userId);
+    this.userId = localStorage.getItem('idUser'); // Charge l'ID utilisateur depuis localStorage
+    if (this.userId) {
+      this.loadAbsences();
+    } else {
+      console.error('Utilisateur non authentifié');
+    }
   }
 
   loadAbsences(): void {
-    console.log('User ID:', this.userId);
-    this.absenceService.getAbsencesByUser(this.userId).subscribe(
+    this.absenceService.getAbsencesByUser().subscribe(
       (data) => {
-        console.log('Données récupérées:', data);
         this.absences = data;
       },
       (error) => {
-        console.error('Erreur lors du chargement des absences', error);
+        console.error('Erreur lors du chargement des absences:', error);
       }
     );
   }
@@ -90,30 +91,25 @@ export class DemandeAbsenceComponent implements OnInit {
       return;
     }
 
-    // Mapper le type d'absence en utilisant le mapping
-    const mappedType = this.typeAbsenceMapping[this.newAbsence.type as keyof typeof this.typeAbsenceMapping];
-    if (!mappedType) {
-      alert('Type d\'absence invalide.');
-      return;
-    }
-
     // Préparer les données à envoyer au backend
+    // const requestData = {
+    //   dateDebut: this.newAbsence.dateDebut,
+    //   dateFin: this.newAbsence.dateFin,
+    //   type: this.newAbsence.type,
+    //   motif: this.newAbsence.motif,
+    // };
     const requestData = {
-      dateDebut: this.newAbsence.dateDebut,
-      dateFin: this.newAbsence.dateFin,
-      type: mappedType,
-      motif: this.newAbsence.motif,
+      ...this.newAbsence,
+      utilisateur: { idUtilisateur: Number(this.userId) }, // Convertit userId en nombre
     };
 
-    // Appel au service pour ajouter une absence
     this.absenceService.addAbsence(requestData).subscribe({
       next: (response) => {
-        console.log('Absence ajoutée avec succès :', response);
-        this.absences.push(response); // Met à jour la liste localement
-        this.newAbsence = { dateDebut: '', dateFin: '', type: '', motif: '' }; // Réinitialise le formulaire
+        this.absences.push(response);
+        this.newAbsence = { dateDebut: '', dateFin: '', type: '', motif: '' };
       },
       error: (err) => {
-        console.error('Erreur lors de l\'ajout de l\'absence :', err);
+        console.error('Erreur lors de l\'ajout de l\'absence:', err);
         alert('Une erreur est survenue lors de l\'ajout de l\'absence.');
       },
     });

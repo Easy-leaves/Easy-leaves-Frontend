@@ -40,4 +40,8 @@ export class LoginService {
       })
     );
   }
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('idUser'); // Supprime également l'ID utilisateur
+  }
 }
