@@ -13,17 +13,10 @@ import * as XLSX from 'xlsx';
 })
 export class HistogrammeCongesComponent implements OnInit {
   chart: any;
-  absencesByDay: { [day: string]: { name: string; color: string }[] } = {
-    Lundi: [],
-    Mardi: [],
-    Mercredi: [],
-    Jeudi: [],
-    Vendredi: [],
-    Samedi: [],
-    Dimanche: [],
-  };
+  absencesByDay: { [day: string]: { name: string; color: string }[] } = this.initializeAbsencesByDay();
   selectedWeek: { startDate: Date; endDate: Date } | null = null;
   userColors: { [userId: number]: string } = {};
+  departementId: number = 1;
 
   constructor(private utilisateursService: UtilisateursService) {
     Chart.register(...registerables);
@@ -31,9 +24,29 @@ export class HistogrammeCongesComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeWeek();
-    this.fetchAbsenceData();
+    this.fetchUserConnected();
   }
 
+
+  /**
+   * Initializes the days of the week with empty absence data.
+   */
+  initializeAbsencesByDay(): { [day: string]: { name: string; color: string }[] } {
+    return {
+      Lundi: [],
+      Mardi: [],
+      Mercredi: [],
+      Jeudi: [],
+      Vendredi: [],
+      Samedi: [],
+      Dimanche: [],
+    };
+  }
+
+
+  /**
+   * Sets the selected week to the current week (Monday to Sunday).
+   */
   initializeWeek(): void {
     const now = new Date();
     const startOfWeek = new Date(now);
@@ -44,15 +57,31 @@ export class HistogrammeCongesComponent implements OnInit {
     this.selectedWeek = { startDate: startOfWeek, endDate: endOfWeek };
   }
 
-  fetchAbsenceData(): void {
-    const departementId = 1;
+  fetchUserConnected(): void {
+    const userId = localStorage.getItem("idUser");
+    this.utilisateursService.getUserById(parseInt(userId || '0')).subscribe({
+      next: (data) => {
+        this.departementId = data.departement;
+        this.fetchAbsenceData(this.departementId);
+      },
+      error: (err) => console.error('Error fetching department:', err),
+    });
+  }
+
+
+  /**
+   * Fetches user data and their absences for the selected department and populates the chart data.
+   */
+  fetchAbsenceData(departementId: number): void {
     this.utilisateursService.getUsersByDepartement(departementId).subscribe({
       next: (users) => {
         users.forEach((user: any) => {
+          // Assign a color to the user if not already assigned
           if (!this.userColors[user.id]) {
             this.userColors[user.id] = this.getRandomColor();
           }
 
+          // Fetch absences for the user
           this.utilisateursService.getAbsencesByUser(user.id).subscribe({
             next: (absences) => {
               this.processAbsences(absences, user);
@@ -66,11 +95,11 @@ export class HistogrammeCongesComponent implements OnInit {
     });
   }
 
-  processAbsences(absences: any[], user: any): void {
-    if (!absences.length && user.nom.startsWith('User')) {
-      return;
-    }
 
+  /**
+   * Processes the absences of a user and populates the data for each day of the week.
+   */
+  processAbsences(absences: any[], user: any): void {
     const weekAbsences = absences.filter((absence) => {
       const startDate = new Date(absence.dateDebut);
       const endDate = new Date(absence.dateFin);
@@ -82,12 +111,14 @@ export class HistogrammeCongesComponent implements OnInit {
 
     weekAbsences.forEach((absence) => {
       let currentDate = new Date(absence.dateDebut);
+
+      // Add each absence to the corresponding day
       while (currentDate <= new Date(absence.dateFin)) {
         const dayOfWeek = currentDate.toLocaleDateString('fr-FR', { weekday: 'long' });
         const dayInFrench = this.capitalize(dayOfWeek);
 
         if (
-          this.absencesByDay[dayInFrench] !== undefined &&
+          this.absencesByDay[dayInFrench] &&
           !this.absencesByDay[dayInFrench].some((a) => a.name === `${user.nom} ${user.prenom}`)
         ) {
           this.absencesByDay[dayInFrench].push({
@@ -95,11 +126,16 @@ export class HistogrammeCongesComponent implements OnInit {
             color: this.userColors[user.id],
           });
         }
+
         currentDate.setDate(currentDate.getDate() + 1);
       }
     });
   }
 
+
+  /**
+   * Changes the selected week (forward or backward) and refreshes the data.
+   */
   changeWeek(direction: number): void {
     const newStartDate = new Date(this.selectedWeek!.startDate);
     newStartDate.setDate(newStartDate.getDate() + direction * 7);
@@ -108,20 +144,14 @@ export class HistogrammeCongesComponent implements OnInit {
     newEndDate.setDate(newStartDate.getDate() + 6);
 
     this.selectedWeek = { startDate: newStartDate, endDate: newEndDate };
-
-    // Reset data and fetch new absences
-    this.absencesByDay = {
-      Lundi: [],
-      Mardi: [],
-      Mercredi: [],
-      Jeudi: [],
-      Vendredi: [],
-      Samedi: [],
-      Dimanche: [],
-    };
-    this.fetchAbsenceData();
+    this.absencesByDay = this.initializeAbsencesByDay();
+    this.fetchAbsenceData(this.departementId);
   }
 
+
+  /**
+   * Generates a stacked bar chart to display absences by day.
+   */
   generateChart(): void {
     if (this.chart) {
       this.chart.destroy();
@@ -129,42 +159,30 @@ export class HistogrammeCongesComponent implements OnInit {
 
     const ctx = document.getElementById('absenceChart') as HTMLCanvasElement;
 
-    // Generate labels with day names and dates
     const labels = Object.keys(this.absencesByDay).map((day, index) => {
-      // Calculate the corresponding date for each day of the selected week
-      const startDate = new Date(this.selectedWeek!.startDate);
-      const dayDate = new Date(startDate.setDate(startDate.getDate() + index)); // Adjust day
-
-      // Format the label to include day name and date (e.g., "Lundi\n22/01")
+      const dayDate = new Date(this.selectedWeek!.startDate);
+      dayDate.setDate(dayDate.getDate() + index);
       return `${day}\n${dayDate.getDate().toString().padStart(2, '0')}/${(dayDate.getMonth() + 1)
         .toString()
         .padStart(2, '0')}`;
     });
 
-    // Prepare datasets for the stacked bar chart
-    const datasets = Object.keys(this.userColors)
-      .map((userId) => {
-        const userName = Object.values(this.absencesByDay)
-          .flat()
-          .find((absence) => absence.color === this.userColors[+userId])?.name;
+    const datasets = Object.keys(this.userColors).map((userId) => {
+      const userName = Object.values(this.absencesByDay)
+        .flat()
+        .find((absence) => absence.color === this.userColors[+userId])?.name;
 
-        if (!userName) return null;
+      if (!userName) return null;
 
-        return {
-          label: userName,
-          data: Object.keys(this.absencesByDay).map(
-            (day) =>
-              this.absencesByDay[day].filter(
-                (absence) => absence.color === this.userColors[+userId]
-              ).length
-          ),
-          backgroundColor: this.userColors[+userId],
-          borderWidth: 1,
-        };
-      })
-      .filter((dataset) => dataset !== null);
+      return {
+        label: userName,
+        data: Object.keys(this.absencesByDay).map(
+          (day) => this.absencesByDay[day].filter((a) => a.color === this.userColors[+userId]).length
+        ),
+        backgroundColor: this.userColors[+userId],
+      };
+    }).filter((dataset) => dataset !== null);
 
-    // Render the chart
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -173,100 +191,65 @@ export class HistogrammeCongesComponent implements OnInit {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, // Allow custom width/height
+        maintainAspectRatio: false,
         plugins: {
-          legend: {
-            display: true,
-            labels: {
-              font: {
-                size: 14,
-              },
-            },
-          },
+          legend: { display: true },
           tooltip: {
             callbacks: {
               label: (tooltipItem) => {
-                const datasetIndex = tooltipItem.datasetIndex!;
-                const dataset = datasets[datasetIndex] as any;
-                const userName = dataset?.label || 'Utilisateur inconnu';
-                return `${userName}: ${tooltipItem.raw} absence(s)`;
+                const dataset = datasets[tooltipItem.datasetIndex!];
+                return `${dataset?.label || 'Utilisateur inconnu'}: ${tooltipItem.raw} absence(s)`;
               },
             },
           },
         },
         scales: {
-          x: {
-            stacked: true,
-            title: {
-              display: true,
-              text: 'Jours de la semaine',
-            },
-            ticks: {
-              callback: function (value: any, index: number, values: any) {
-                // Adjust the X-axis ticks to display multiline labels (day name and date)
-                const label = labels[index];
-                return label;
-              },
-            },
-          },
-          y: {
-            stacked: true,
-            title: {
-              display: true,
-              text: 'Nombre total d’absences',
-            },
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1,
-            },
-          },
+          x: { stacked: true, title: { display: true, text: 'Jours de la semaine' } },
+          y: { stacked: true, title: { display: true, text: 'Nombre total d’absences' }, beginAtZero: true },
         },
       },
     });
   }
 
 
-  capitalize(word: string): string {
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  }
-
-  getRandomColor(): string {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-
+  /**
+   * Exports the absence data to an Excel file.
+   */
   exportToExcel(): void {
-    // Prepare data for Excel export
     const exportData = Object.keys(this.absencesByDay).map((day, index) => {
-      // Get the date for the day
-      const startDate = new Date(this.selectedWeek!.startDate);
-      const dayDate = new Date(startDate.setDate(startDate.getDate() + index));
-      const formattedDate = `${dayDate.getDate().toString().padStart(2, '0')}/${(dayDate.getMonth() + 1).toString().padStart(2, '0')}`;
+      const dayDate = new Date(this.selectedWeek!.startDate);
+      dayDate.setDate(dayDate.getDate() + index);
+      const formattedDate = `${dayDate.getDate().toString().padStart(2, '0')}/${(dayDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}`;
 
-      // Prepare the row data
       const absences = this.absencesByDay[day]
         .map((absence) => `${absence.name} (${absence.color})`)
         .join(', ');
 
-      return {
-        Day: day,
-        Date: formattedDate,
-        Absences: absences,
-      };
+      return { Day: day, Date: formattedDate, Absences: absences };
     });
 
-    // Convert data to a worksheet
     const worksheet = XLSX.utils.json_to_sheet(exportData);
-
-    // Create a workbook and add the worksheet
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Histogram Data');
-
-    // Export the workbook as an Excel file
     XLSX.writeFile(workbook, 'histogramme_absences.xlsx');
+  }
+
+
+  /**
+   * Capitalizes the first letter of a word.
+   */
+  capitalize(word: string): string {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
+
+  /**
+   * Generates a random color in hex format.
+   */
+  getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    return `#${Array.from({ length: 6 }, () => letters[Math.floor(Math.random() * 16)]).join('')}`;
   }
 }
