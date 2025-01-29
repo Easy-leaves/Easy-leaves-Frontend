@@ -17,4 +17,13 @@ export class LoginService {
       })
     );
   }
+
+  getUserById(userId: number): Observable<any> {
+    return this.http.get<any>(`http://localhost:8080/utilisateurs/${userId}`).pipe(
+      catchError(error => {
+        console.error("Error fetching user:", error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

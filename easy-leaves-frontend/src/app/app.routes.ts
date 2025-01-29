@@ -8,13 +8,22 @@ import { AbsencesComponent } from './pages/absences/absences.component';
 import { DeconnexionComponent } from './pages/deconnexion/deconnexion.component';
 import { AuthGuard } from './guard/auth.guard';
 
-
 export const routes: Routes = [
   { path: '', component: AboutComponent, canActivate: [AuthGuard] },
   { path: 'header', component: HeaderComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'administrateur', component: AdministrateurComponent, canActivate: [AuthGuard] },
-  { path: 'listeCollaborateur', component: ListeCollaborateurComponent, canActivate: [AuthGuard] },
+  {
+    path: 'administrateur',
+    component: AdministrateurComponent,
+    canActivate: [AuthGuard],
+    data: { role: 'ADMINISTRATEUR' }
+  },
+  {
+    path: 'listeCollaborateur',
+    component: ListeCollaborateurComponent,
+    canActivate: [AuthGuard],
+    data: { role: 'MANAGER' }
+  },
   { path: 'absence', component: AbsencesComponent, canActivate: [AuthGuard] },
   { path: 'deconnexion', component: DeconnexionComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '', pathMatch: 'full' }
