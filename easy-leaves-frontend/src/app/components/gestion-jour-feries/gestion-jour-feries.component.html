@@ -44,140 +44,23 @@
         </table>
     </section>
 </div>
-
-<div 
-  class="modal-backdrop fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50" 
-  *ngIf="isDeleteModalOpen"
->
-    <div class="modal bg-white rounded-lg shadow-lg w-96 p-6">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">
-            Confirmation
-        </h2>
-        <!-- Messages d'erreur -->
-        <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
-            <span class="block sm:inline">{{ errorMessage }}</span>
-        </div>
-        <p class="text-gray-600 mb-6">
-            Voulez-vous vraiment supprimer ce jour férié ?
-        </p>
-        <div class="modal-actions flex justify-end space-x-4">
-            <button 
-              class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded transition"
-              (click)="closeModal()">
-                Annuler
-            </button>
-            <button 
-              class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded transition"
-              (click)="submitDelete()">
-                Confirmer
-            </button>
-        </div>
-    </div>
-</div>
-
-<div 
-  class="modal-backdrop fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
-  *ngIf="isEditModalOpen"
->
-    <div class="modal bg-white rounded-lg shadow-lg w-96 p-6">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">
-            Modifier les informations
-        </h2>
-        <!-- Messages d'erreur -->
-        <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
-            <span class="block sm:inline">{{ errorMessage }}</span>
-        </div>
-        <form (ngSubmit)="submitEdit()">
-            <div class="mb-4">
-                <label for="nomJour" class="block text-gray-700 font-medium mb-2">Nom du Jour</label>
-                <input
-                    id="nomJour"
-                    type="text"
-                    [(ngModel)]="currentHoliday.motif"
-                    name="motif"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Entrez le nom du jour"
-                    required
-                />
-            </div>
-            <div class="mb-6">
-                <label for="date" class="block text-gray-700 font-medium mb-2">Date</label>
-                <input
-                    id="date"
-                    type="date"
-                    [(ngModel)]="currentHoliday.dateDebut"
-                    name="dates"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    required
-                />
-            </div>
-            <div class="modal-actions flex justify-end space-x-4">
-                <button
-                    type="button"
-                    class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded transition"
-                    (click)="closeModal()"
-                >
-                    Annuler
-                </button>
-                <button
-                    type="submit"
-                    class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded transition"
-                >
-                    Enregistrer
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-<div
-  class="modal-backdrop fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
-  *ngIf="isAddModalOpen"
->
-  <div class="modal bg-white rounded-lg shadow-lg w-96 p-6">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">Ajouter un Jour Férié</h2>
-    <!-- Messages d'erreur -->
-    <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
-        <span class="block sm:inline">{{ errorMessage }}</span>
-    </div>
-    <form (ngSubmit)="submitAdd()">
-      <div class="mb-4">
-        <label for="nomJour" class="block text-gray-700 font-medium mb-2">Nom du Jour</label>
-        <input
-          id="nomJour"
-          type="text"
-          [(ngModel)]="newHoliday.motif"
-          name="motif"
-          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Entrez le nom du jour"
-          required
-        />
-      </div>
-      <div class="mb-6">
-        <label for="date" class="block text-gray-700 font-medium mb-2">Date</label>
-        <input
-          id="date"
-          type="date"
-          [(ngModel)]="newHoliday.dateDebut"
-          name="dateDebut"
-          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          required
-        />
-      </div>
-      <div class="modal-actions flex justify-end space-x-4">
-        <button
-          type="button"
-          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded transition"
-          (click)="closeModal()"
-        >
-          Annuler
-        </button>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded transition"
-        >
-          Ajouter
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+<app-modal-update-jour-ferie
+    [holiday]="currentHoliday" 
+    [isOpen]="isEditModalOpen" 
+    [errorMessage]="modalErrorMessage" 
+    (close)="isEditModalOpen = false; modalErrorMessage = ''" 
+    (save)="submitEdit($event)">
+</app-modal-update-jour-ferie>
+<app-modal-add-jour-ferie
+    [isOpen]="isAddModalOpen" 
+    [errorMessage]="modalErrorMessage" 
+    (close)="isEditModalOpen = false; modalErrorMessage = ''" 
+    (save)="submitAdd($event)"
+    (close)="closeModal()">
+</app-modal-add-jour-ferie>
+<app-modal-delete-jour-ferie
+    [isOpen]="isDeleteModalOpen" 
+    [holiday]="currentHoliday"
+    (close)="closeModal()" 
+    (confirmDelete)="submitDelete($event)">
+</app-modal-delete-jour-ferie>

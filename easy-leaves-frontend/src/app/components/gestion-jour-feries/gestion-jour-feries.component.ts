@@ -7,11 +7,14 @@ import { Type } from '../../enums/Type';
 import { Absence } from '../../model/absence';
 import { FormsModule } from '@angular/forms';
 import { Statut } from '../../enums/Statut';
+import { ModalAddJourFerieComponent } from '../modal/modal-add-jour-ferie/modal-add-jour-ferie.component';
+import { ModalDeleteJourFerieComponent } from '../modal/modal-delete-jour-ferie/modal-delete-jour-ferie.component';
+import { ModalUpdateJourFerieComponent } from "../modal/modal-update-jour-ferie/modal-update-jour-ferie.component";
 
 @Component({
   selector: 'app-gestion-jour-feries',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ModalAddJourFerieComponent, ModalDeleteJourFerieComponent, ModalDeleteJourFerieComponent, ModalUpdateJourFerieComponent],
   templateUrl: './gestion-jour-feries.component.html',
   styleUrl: './gestion-jour-feries.component.css'
 })
@@ -20,25 +23,16 @@ export class GestionJourFeriesComponent {
   isDeleteModalOpen = false;
   isEditModalOpen = false;
   isAddModalOpen = false;
-  errorMessage: string = '';
+  modalErrorMessage: string = '';
   successMessage: string = '';
-  currentHoliday: Absence = {
+  currentHoliday: AbsenceModel = {
     id: 0,
     dateDebut: new Date(),
     dateFin: new Date(),
     type: Type.FERIE,
     motif: '',
     statut: Statut.VALIDEE,
-    utilisateurId: 0
-  };
-  newHoliday: Absence = {
-    id: 0,
-    dateDebut: new Date(),
-    dateFin: new Date(),
-    type: Type.FERIE,
-    motif: '',
-    statut: Statut.VALIDEE,
-    utilisateurId: 0
+    utilisateurNom: ''
   };
 
   constructor(private absencesService: AbsencesService) {}
@@ -108,7 +102,7 @@ export class GestionJourFeriesComponent {
    * Valide et soumet les modifications d'un jour férié.
    * Met à jour l'entrée correspondante dans le backend et localement.
    */
-  submitEdit() {
+  submitEdit(holiday: AbsenceModel) {
     // Vérifiez que les données de `currentHoliday` sont valides
     if (!this.currentHoliday) {
       this.handleError("Les données de modification sont invalides.");
@@ -132,12 +126,12 @@ export class GestionJourFeriesComponent {
 
     // Préparez les données à envoyer au backend
     const updatedHoliday: AbsenceModel = {
-      id: this.currentHoliday.id,
-      dateDebut: this.currentHoliday.dateDebut,
-      dateFin: this.currentHoliday.dateDebut,
-      type: this.currentHoliday.type,
-      statut: this.currentHoliday.statut,
-      motif: this.currentHoliday.motif,
+      id: holiday.id,
+      dateDebut: holiday.dateDebut,
+      dateFin: holiday.dateDebut,
+      type: holiday.type,
+      statut: holiday.statut,
+      motif: holiday.motif,
       utilisateurNom: ''
     };
 
@@ -164,8 +158,8 @@ export class GestionJourFeriesComponent {
    * Valide et ajoute un nouveau jour férié.
    * Envoie les données au backend et met à jour la liste locale.
    */
-  submitAdd() {
-    const startDate = new Date(this.newHoliday.dateDebut);
+  submitAdd(newHoliday: AbsenceModel) {
+    const startDate = new Date(newHoliday.dateDebut);
   
     // Vérification de la validité de la date
     if (isNaN(startDate.getTime())) {
@@ -181,7 +175,7 @@ export class GestionJourFeriesComponent {
     }
   
     // Vérification si un motif est fourni
-    if (!this.newHoliday.motif || this.newHoliday.motif.trim() === '') {
+    if (!newHoliday.motif || newHoliday.motif.trim() === '') {
       this.handleError("Le motif du jour férié est obligatoire.");
       return;
     }
@@ -189,11 +183,11 @@ export class GestionJourFeriesComponent {
     // Préparer les données pour l'ajout
     const holidayToAdd: AbsenceModel = {
       id: 0,
-      dateDebut: this.newHoliday.dateDebut,
-      dateFin: this.newHoliday.dateDebut,
+      dateDebut: newHoliday.dateDebut,
+      dateFin: newHoliday.dateDebut,
       type: Type.FERIE,
       statut: Statut.VALIDEE,
-      motif: this.newHoliday.motif,
+      motif: newHoliday.motif,
       utilisateurNom: '',
     };
   
@@ -225,7 +219,7 @@ export class GestionJourFeriesComponent {
       id: holiday.idAbsence,
       dateDebut: new Date(holiday.dates.split(' - ')[0]),
       dateFin: new Date(holiday.dates.split(' - ')[0]),
-      utilisateurId: 0,
+      utilisateurNom: '',
       motif: holiday.motif,
       statut: (Object.values(Statut).includes(holiday.statut as Statut) ? holiday.statut : Statut.VALIDEE) as Statut,
       type: (Object.values(Type).includes(holiday.type as Type) ? holiday.type : Type.FERIE) as Type,
@@ -240,19 +234,20 @@ export class GestionJourFeriesComponent {
    */
   openDeleteModal(holiday: AbsenceView) {
     if (!holiday) {
-      this.handleError('Données introuvables');
+      this.handleError('Données de jour férié introuvables.');
       return;
     }
 
     this.currentHoliday = {
       id: holiday.idAbsence,
-      dateDebut: new Date(holiday.dates),
-      dateFin: new Date(holiday.dates),
-      utilisateurId: 0,
+      dateDebut: new Date(holiday.dates.split(' - ')[0]),
+      dateFin: new Date(holiday.dates.split(' - ')[0]),
+      utilisateurNom: '',
       motif: holiday.motif,
-      statut: holiday.statut,
-      type: holiday.type,
+      statut: (Object.values(Statut).includes(holiday.statut as Statut) ? holiday.statut : Statut.VALIDEE) as Statut,
+      type: (Object.values(Type).includes(holiday.type as Type) ? holiday.type : Type.FERIE) as Type,
     };
+
     this.isDeleteModalOpen = true;
   }
 
@@ -262,16 +257,7 @@ export class GestionJourFeriesComponent {
    */
   openAddModal() {
     this.isAddModalOpen = true;
-    this.newHoliday = {
-      id: 0,
-      dateDebut: new Date(),
-      dateFin: new Date(),
-      type: Type.FERIE,
-      motif: '',
-      statut: Statut.VALIDEE,
-      utilisateurId: 0,
-    };
-    this.errorMessage = '';
+    this.modalErrorMessage = '';
   }  
 
   /**
@@ -282,26 +268,17 @@ export class GestionJourFeriesComponent {
     this.isDeleteModalOpen = false;
     this.isEditModalOpen = false;
     this.isAddModalOpen = false;
-    this.errorMessage = '';
-    this.currentHoliday = {
-      id: 0,
-      dateDebut: new Date(),
-      dateFin: new Date(),
-      type: Type.FERIE,
-      motif: '',
-      statut: Statut.VALIDEE,
-      utilisateurId: 0
-    };
+    this.modalErrorMessage = '';
   }
 
   /**
    * Supprime un jour férié sélectionné.
    * Met à jour la liste locale après suppression dans le backend.
    */
-  submitDelete(): void {
-    this.absencesService.deleteHoliday(this.currentHoliday.id).subscribe(
+  submitDelete(holidayId: number): void {
+    this.absencesService.deleteHoliday(holidayId).subscribe(
       (response) => {
-        this.holidays = this.holidays.filter((holiday) => holiday.idAbsence !== this.currentHoliday.id);
+        this.holidays = this.holidays.filter((holiday) => holiday.idAbsence !== holidayId);
 
         this.handleSuccess('Jour férié supprimé avec succès.');
         this.closeModal();
@@ -317,7 +294,7 @@ export class GestionJourFeriesComponent {
    * @param message - Le message d'erreur à afficher.
    */
   handleError(message: string): void {
-    this.errorMessage = message;
+    this.modalErrorMessage = message;
   }
 
   /**

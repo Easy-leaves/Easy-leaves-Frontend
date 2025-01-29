@@ -1,0 +1,25 @@
+<div 
+  class="modal-backdrop fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50" 
+  *ngIf="isOpen"
+>
+    <div class="modal bg-white rounded-lg shadow-lg w-96 p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            Confirmation
+        </h2>
+        <p class="text-gray-600 mb-6">
+            Voulez-vous vraiment supprimer ce jour férié ?
+        </p>
+        <div class="modal-actions flex justify-end space-x-4">
+            <button 
+              class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded transition"
+              (click)="onClose()">
+                Annuler
+            </button>
+            <button 
+              class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded transition"
+              (click)="onDelete()">
+                Confirmer
+            </button>
+        </div>
+    </div>
+</div>
