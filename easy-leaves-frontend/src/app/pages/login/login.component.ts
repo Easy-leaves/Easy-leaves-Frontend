@@ -22,6 +22,8 @@ export class LoginComponent {
 
   // Method to log in
   connect(valueEmail: string, valuePassword: string) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('idUser');
     this.isPasswordEmpty = valuePassword.trim() === '';
     this.isEmailEmpty = valueEmail.trim() === '';
 
@@ -43,7 +45,7 @@ export class LoginComponent {
           const userId = tokenPayload.id; // Supposons que l'ID utilisateur est stocké sous la clé 'id'
           localStorage.setItem('idUser', userId);
           localStorage.setItem('token', response.token);
-  
+
           // Redirection ou autre action après connexion réussie
           this.router.navigate(['/']);
         }
