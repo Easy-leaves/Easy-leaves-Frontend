@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AbsenceService } from '../../services/absence.service';
-import { AuthService } from '../../services/auth.service'; // Service pour l'authentification
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';

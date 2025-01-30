@@ -15,6 +15,7 @@ export class AbsenceService {
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
+    console.log("Token envoyé:", token);
     return new HttpHeaders({
       Authorization: 'Bearer ' + token,
     });
