@@ -10,10 +10,14 @@ import { CommonModule } from '@angular/common';
 })
 export class HeaderComponent implements OnInit {
   userRole: string | null = null;
+  isCheckingAuth = true;
 
   ngOnInit() {
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      this.userRole = sessionStorage.getItem('role');
-    }
+    setTimeout(() => {
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        this.userRole = sessionStorage.getItem('role');
+      }
+      this.isCheckingAuth = false;
+    }, 0);
   }
 }

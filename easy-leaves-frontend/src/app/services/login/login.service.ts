@@ -20,7 +20,7 @@ export class LoginService {
   }
 
   getUserById(userId: number): Observable<any> {
-    const token = localStorage.getItem('token'); // Retrieve token from localStorage
+    const token = localStorage.getItem('token');
 
     if (!token) {
       console.error("No token found!");
