@@ -22,8 +22,7 @@ export class LoginComponent {
 
   // Method to log in
   connect(valueEmail: string, valuePassword: string) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('idUser');
+    localStorage.clear();
     this.isPasswordEmpty = valuePassword.trim() === '';
     this.isEmailEmpty = valueEmail.trim() === '';
 
@@ -38,26 +37,26 @@ export class LoginComponent {
 
     this.loginService.seConnecter(loginData).subscribe({
       next: (response) => {
-        // console.log("Result connection : ", response);
         if (response.token) {
-          // Décoder le payload du JWT pour extraire l'ID utilisateur
-          const tokenPayload = JSON.parse(atob(response.token.split('.')[1])); // La payload est le deuxième segment du token
-          const userId = tokenPayload.id; // Supposons que l'ID utilisateur est stocké sous la clé 'id'
+          const tokenPayload = JSON.parse(atob(response.token.split('.')[1]));
+          const userId = tokenPayload.id;
           localStorage.setItem('idUser', userId);
           localStorage.setItem('token', response.token);
 
-          // Redirection ou autre action après connexion réussie
-          this.router.navigate(['/']);
+          // Redirect to previous URL or home
+          const redirectUrl = sessionStorage.getItem('previousUrl') || '/';
+          sessionStorage.removeItem('previousUrl');
+          this.router.navigate([redirectUrl]);
         }
       },
       error: (err) => {
         if (err.status === 403) {
-          console.error("Invalid email or password");
           this.isConnectionError = true;
         } else {
           console.error("An unexpected error occurred:", err);
         }
       }
     });
+
   }
 }

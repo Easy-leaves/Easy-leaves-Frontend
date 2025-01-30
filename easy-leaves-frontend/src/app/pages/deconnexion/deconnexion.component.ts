@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
 })
 export class DeconnexionComponent {
   constructor(private router: Router) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('idUser');
+    localStorage.clear();
+    sessionStorage.clear();
     this.router.navigate(['/login']);
   }
 }

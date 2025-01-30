@@ -22,23 +22,28 @@ export class AuthGuard implements CanActivate {
 
       return this.loginService.getUserById(+userId).pipe(
         map((user) => {
-          const requiredRole = route.data['role'];
+          console.log("User Role:", user.role);
+          sessionStorage.setItem('role', user.role);
 
+          const requiredRole = route.data['role'];
           if (!requiredRole || user.role === requiredRole) {
-            sessionStorage.setItem('previousUrl', state.url); // Store in sessionStorage
+            sessionStorage.setItem('previousUrl', state.url);
             return true;
           }
 
-          // Retrieve last visited page (or default to home)
           const previousUrl = sessionStorage.getItem('previousUrl') || '/';
-          this.router.navigate([previousUrl]);
+          if (previousUrl != '/login') {
+            this.router.navigate([previousUrl]);
+          }
           return false;
         }),
         catchError(() => {
+          console.error("Error fetching user role");
           this.router.navigate(['/login']);
           return of(false);
         })
       );
+
     }
 
     this.router.navigate(['/login']);
