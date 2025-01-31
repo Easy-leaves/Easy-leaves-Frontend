@@ -20,9 +20,10 @@ export class LoginComponent {
   isPasswordEmpty: boolean = false;
   isConnectionError: boolean = false;
 
-  // Method to log in
+  // Méthode de connexion
   connect(valueEmail: string, valuePassword: string) {
     localStorage.clear();
+    sessionStorage.clear();
     this.isPasswordEmpty = valuePassword.trim() === '';
     this.isEmailEmpty = valueEmail.trim() === '';
 
@@ -38,22 +39,24 @@ export class LoginComponent {
     this.loginService.seConnecter(loginData).subscribe({
       next: (response) => {
         if (response.token) {
+          // Décode le token et extrait l'ID utilisateur
           const tokenPayload = JSON.parse(atob(response.token.split('.')[1]));
           const userId = tokenPayload.id;
           localStorage.setItem('idUser', userId);
           localStorage.setItem('token', response.token);
 
-          // Redirect to previous URL or home
+          // Redirige vers l'URL précédente ou la page d'accueil
           const redirectUrl = sessionStorage.getItem('previousUrl') || '/';
           sessionStorage.removeItem('previousUrl');
           this.router.navigate([redirectUrl]);
         }
       },
       error: (err) => {
+        // Affiche une erreur si les identifiants sont incorrects
         if (err.status === 403) {
           this.isConnectionError = true;
         } else {
-          console.error("An unexpected error occurred:", err);
+          console.error("Une erreur inattendue s'est produite:", err);
         }
       }
     });

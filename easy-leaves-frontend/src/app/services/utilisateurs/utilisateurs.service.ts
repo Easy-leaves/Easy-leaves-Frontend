@@ -10,7 +10,7 @@ export class UtilisateursService {
 
   constructor(private http: HttpClient) { }
 
-  // Method to fetch data for role 1
+  // Methode pour obtenir les utilisateurs d'un service
   getUsersByDepartement(departementId: number): Observable<any> {
     const url = `${this.apiUrl}/utilisateurs/departement/${departementId}`;
     return this.http.get<any>(url).pipe(
@@ -18,7 +18,7 @@ export class UtilisateursService {
     );
   }
 
-  // Method to get Absences by User id
+  // Methode pour obtenir les Absences par leurs id User
   getAbsencesByUser(userId: number): Observable<any> {
     const url = `${this.apiUrl}/absences/utilisateur/${userId}`;
     return this.http.get<any>(url).pipe(
@@ -26,7 +26,7 @@ export class UtilisateursService {
     );
   }
 
-  // Method to get User by their id
+  // Methode pour obtenir les Utilisateurs par leurs id User
   getUserById(userId: number): Observable<any> {
     const url = `${this.apiUrl}/utilisateurs/${userId}`;
     return this.http.get<any>(url).pipe(
@@ -41,7 +41,7 @@ export class UtilisateursService {
   }
 
 
-  // Error handling method
+  // Gestion des erreurs
   private handleError(error: any): Observable<never> {
     console.error('An error occurred:', error);
     return throwError(() => new Error('Something went wrong. Please try again later.'));

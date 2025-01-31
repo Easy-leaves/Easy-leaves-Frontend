@@ -10,21 +10,23 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
+  // Méthode pour envoyer les identifiants de connexion
   seConnecter(data: { email: string; password: string }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/auth/authenticate`, data).pipe(
       catchError(error => {
-        console.error("Error occurred:", error);
+        console.error("Erreur lors de l'authentification:", error);
         return throwError(() => error);
       })
     );
   }
 
+  // Méthode pour récupérer un utilisateur par son ID
   getUserById(userId: number): Observable<any> {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      console.error("No token found!");
-      return throwError(() => new Error("No token found!"));
+      console.error("Aucun token trouvé !");
+      return throwError(() => new Error("Aucun token trouvé !"));
     }
 
     const headers = new HttpHeaders({
@@ -33,7 +35,7 @@ export class LoginService {
 
     return this.http.get<any>(`${this.apiUrl}/utilisateurs/${userId}`, { headers }).pipe(
       catchError(error => {
-        console.error("Error fetching user:", error);
+        console.error("Erreur lors de la récupération de l'utilisateur:", error);
         return throwError(() => error);
       })
     );

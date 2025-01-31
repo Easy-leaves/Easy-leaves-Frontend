@@ -1,3 +1,4 @@
+// Importation des modules et composants nécessaires
 import { Component, OnInit } from '@angular/core';
 import { Router, Event, NavigationStart, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
@@ -14,21 +15,21 @@ import { FooterComponent } from './components/footer/footer.component';
 })
 export class AppComponent implements OnInit {
   title = 'easy-leaves-frontend';
-  showHeader = true;
-  isLoading = false;  // Default false to prevent flashing on first load
+  showHeader = true; // Affiche ou masque l'en-tête selon la page
+  isLoading = false; // Indique si une navigation est en cours
 
   constructor(private router: Router) {}
 
   ngOnInit() {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
-        this.isLoading = true; // Start loading on route change
+        this.isLoading = true; // Active l'écran de chargement
       }
       if (event instanceof NavigationEnd) {
         setTimeout(() => {
-          this.isLoading = false; // Ensure smooth transition
-          this.showHeader = !event.urlAfterRedirects.includes('login');
-        }, 300); // Small delay to prevent flickering
+          this.isLoading = false;
+          this.showHeader = !event.urlAfterRedirects.includes('login'); // Cache l'en-tête sur la page de connexion
+        }, 300);
       }
     });
   }
