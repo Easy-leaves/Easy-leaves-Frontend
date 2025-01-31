@@ -10,14 +10,14 @@
     </div>
     <form (ngSubmit)="onSave()">
       <div class="mb-4">
-        <label for="nomJour" class="block text-gray-700 font-medium mb-2">Nom du Jour</label>
+        <label for="nomJour" class="block text-gray-700 font-medium mb-2">Motif</label>
         <input
           id="nomJour"
           type="text"
           [(ngModel)]="newRttEmployeur.motif"
           name="motif"
           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Entrez le nom du jour"
+          placeholder="Entrez le motif"
           required
         />
       </div>
