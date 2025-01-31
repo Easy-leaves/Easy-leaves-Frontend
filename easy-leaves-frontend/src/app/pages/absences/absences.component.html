@@ -1,3 +1,10 @@
-<div class="absences-container">
-    <app-calendrier-absences></app-calendrier-absences>
+<div class="menu">
+	<button [class.selected]="vueActive === 'demandeAbsence'" (click)="changerVue('demandeAbsence')">Demandes en cours</button>
+	<button [class.selected]="vueActive === 'calendrier'" (click)="changerVue('calendrier')">Calendrier de mes absences</button>
+</div>
+
+<div class="contenu">
+  <!-- Affiche Gestion des Absences si vueActive est 'gestionAbsences' -->
+  <app-demande-absence *ngIf="vueActive === 'demandeAbsence'"/>
+  <app-calendrier-absences *ngIf="vueActive === 'calendrier'"/>
 </div>

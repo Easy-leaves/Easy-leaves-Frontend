@@ -1,0 +1,57 @@
+<div class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Modifier une Absence</h2>
+
+        <!-- Formulaire de modification -->
+        <form (ngSubmit)="submitEdit()" class="space-y-4">
+            <!-- Date de début -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Date de début</label>
+                <input type="date" [(ngModel)]="data.absence.dateDebut" name="dateDebut"
+                    class="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                    required />
+            </div>
+
+            <!-- Date de fin -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Date de fin</label>
+                <input type="date" [(ngModel)]="data.absence.dateFin" name="dateFin"
+                    class="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                    required />
+            </div>
+
+            <!-- Type d'absence -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Type d'absence</label>
+                <select [(ngModel)]="data.absence.type" name="type"
+                    class="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                    required>
+                    <option value="" disabled selected>Sélectionnez un type</option>
+                    <option value="CONGE_PAYE">Congé payé</option>
+                    <option value="CONGE_SANS_SOLDE">Congé Sans Solde</option>
+                    <option value="RTT_EMPLOYEUR">RTT Employeur</option>
+                    <option value="RTT_EMPLOYE">RTT Employé</option>
+                    <option value="AUTRE">Autre</option>
+                </select>
+            </div>
+
+            <!-- Raison -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Raison (optionnelle)</label>
+                <input type="text" [(ngModel)]="data.absence.motif" name="motif"
+                    class="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500" />
+            </div>
+
+            <!-- Boutons -->
+            <div class="flex justify-end space-x-4">
+                <button type="button" (click)="closeDialog()"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                    Annuler
+                </button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
