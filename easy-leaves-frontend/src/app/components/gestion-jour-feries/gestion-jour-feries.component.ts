@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbsencesService } from '../../services/absences.service';
+import { AbsencesService } from '../../services/absence/absences.service';
 import { AbsenceModel } from '../ViewModels/AbsenceModel';
 import { CommonModule, formatDate } from '@angular/common';
 import { AbsenceView } from '../ViewModels/AbsenceView';

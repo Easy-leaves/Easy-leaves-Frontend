@@ -4,7 +4,7 @@ import { AbsenceModel } from '../ViewModels/AbsenceModel';
 import { Type } from '../../enums/Type';
 import { Statut } from '../../enums/Statut';
 import { CommonModule, formatDate } from '@angular/common';
-import { AbsencesService } from '../../services/absences.service';
+import { AbsencesService } from '../../services/absence/absences.service';
 import { ModalCreateRttEmployeurComponent } from '../modal/rtt-employeur/modal-create-rtt-employeur/modal-create-rtt-employeur.component';
 import { ModalDeleteRttEmployeurComponent } from '../modal/rtt-employeur/modal-delete-rtt-employeur/modal-delete-rtt-employeur.component';
 import { ModalUpdateRttEmployeurComponent } from '../modal/rtt-employeur/modal-update-rtt-employeur/modal-update-rtt-employeur.component';
@@ -17,7 +17,6 @@ import { ModalUpdateRttEmployeurComponent } from '../modal/rtt-employeur/modal-u
   styleUrl: './gestion-rtt-employeur.component.css'
 })
 export class GestionRttEmployeurComponent {
-  rttEmployeurs: AbsenceModel[] = [];
   rttEmployeursView: AbsenceView[] = [];
   isDeleteModalOpen = false;
   isEditModalOpen = false;
@@ -50,15 +49,6 @@ export class GestionRttEmployeurComponent {
   fetchRttEmployeur() {
     this.absencesService.getAbsencesByType(Type.RTT_EMPLOYEUR).subscribe(
       (data: AbsenceModel[]) => {
-        this.rttEmployeurs = data.map((rttEmployeur) => ({
-          id: rttEmployeur.id,
-          dateDebut: rttEmployeur.dateDebut,
-          dateFin: rttEmployeur.dateFin,
-          type: this.getAbsenceType(rttEmployeur.type),
-          statut: this.getAbsenceStatut(rttEmployeur.statut),
-          motif: rttEmployeur.motif,
-          utilisateurNom: rttEmployeur.utilisateurNom,
-        }));
         this.rttEmployeursView = data.map((rttEmployeur) => ({
           idAbsence: rttEmployeur.id,
           dates: formatDate(rttEmployeur.dateDebut, 'dd/MM/yyyy', 'fr-FR') + '-' + formatDate(rttEmployeur.dateFin, 'dd/MM/yyyy', 'fr-FR'),
@@ -168,23 +158,18 @@ export class GestionRttEmployeurComponent {
   submitEdit(rttEmployeur: AbsenceModel){
     this.absencesService.updateRTTEmployeur(rttEmployeur).subscribe(
       (response) => {
-        this.rttEmployeurs = this.rttEmployeurs.map((rttEmployeur) => ({
-          id: rttEmployeur.id,
-          dateDebut: rttEmployeur.dateDebut,
-          dateFin: rttEmployeur.dateFin,
-          type: this.getAbsenceType(rttEmployeur.type),
-          statut: this.getAbsenceStatut(rttEmployeur.statut),
-          motif: rttEmployeur.motif,
-          utilisateurNom: rttEmployeur.utilisateurNom,
-        }));
-        this.rttEmployeursView = this.rttEmployeurs.map((rttEmployeur) => ({
-          idAbsence: rttEmployeur.id,
-          dates: formatDate(rttEmployeur.dateDebut, 'dd/MM/yyyy', 'fr-FR') + '-' + formatDate(rttEmployeur.dateFin, 'dd/MM/yyyy', 'fr-FR'),
-          type: this.getAbsenceType(rttEmployeur.type),
-          statut: this.getAbsenceStatut(rttEmployeur.statut),
-          motif: rttEmployeur.motif,
-          nom: '',
-        }));
+        this.rttEmployeursView = this.rttEmployeursView.map((rtt) =>
+          rtt.idAbsence === rttEmployeur.id
+            ? {
+                idAbsence: rttEmployeur.id,
+                dates: formatDate(rttEmployeur.dateDebut, 'dd/MM/yyyy', 'fr-FR') + '-' + formatDate(rttEmployeur.dateFin, 'dd/MM/yyyy', 'fr-FR'),
+                type: this.getAbsenceType(rttEmployeur.type),
+                statut: this.getAbsenceStatut(rttEmployeur.statut),
+                motif: rttEmployeur.motif,
+                nom: '',
+              }
+            : rtt
+        );
         this.handleSuccess('Jour férié modifié avec succès.');
 
         this.closeModal();
@@ -212,7 +197,6 @@ export class GestionRttEmployeurComponent {
   submitDelete(id: number){
     this.absencesService.deleteAbsence(id).subscribe(
       (response) => {
-        this.rttEmployeurs = this.rttEmployeurs.filter((rtt) => rtt.id !== id);
         this.rttEmployeursView = this.rttEmployeursView.filter((rtt) => rtt.idAbsence !== id);
 
         this.handleSuccess('Jour férié supprimé avec succès.');

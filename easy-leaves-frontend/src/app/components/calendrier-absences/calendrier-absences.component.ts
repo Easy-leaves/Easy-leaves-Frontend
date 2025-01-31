@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { AbsenceService } from '../../services/absence/absence.service';
+import { AbsencesService } from '../../services/absences/absences.service';
 import { Absence } from '../../model/absence';
 import { UtilisateursService } from '../../services/utilisateurs/utilisateurs.service';
 
@@ -28,18 +28,17 @@ export class CalendrierAbsencesComponent {
   holidays: { [date: string]: string } = {};
 
   constructor(
-    private absenceService: AbsenceService,
+    private absencesService: AbsencesService,
     private utilisateursService: UtilisateursService
   ) {}
 
   ngOnInit() {
     this.loadAbsences(parseInt(localStorage.getItem("idUser") || '0'));
-    /*this.loadHolidays(this.selectedYear);*/
     this.generateDaysInMonth();
   }
 
   loadAbsences(userId: number) {
-    this.absenceService.getAbsencesByUtilisateurId(userId).subscribe((absences) => {
+    this.absencesService.getAbsencesByUtilisateurId(userId).subscribe((absences) => {
       this.absences = absences;
     });
   }
@@ -140,19 +139,8 @@ export class CalendrierAbsencesComponent {
     );
   }
 
-  /*loadHolidays(year: number) {
-    this.absenceService.getHolidays(year).subscribe((data) => {
-      // Convertir les dates en clés (format ISO 8601 simplifié : YYYY-MM-DD)
-      this.holidays = {};
-      for (const date of Object.keys(data)) {
-        const holidayDate = new Date(date).toISOString().split('T')[0];
-        this.holidays[holidayDate] = data[date]; // Ajouter le nom du jour férié
-      }
-    });
-  }*/
-
   isHoliday(day: number): boolean {
-    // Construire la date à partir de l'année, du mois et du jour sélectionnés
+    // Construit la date à partir de l'année, du mois et du jour sélectionnés
     const dateKey = new Date(this.selectedYear, this.selectedMonth, day).toISOString().split('T')[0];
     return this.holidays.hasOwnProperty(dateKey);
   }

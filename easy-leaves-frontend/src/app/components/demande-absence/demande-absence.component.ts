@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbsenceService } from '../../services/absence.service';
+import { AbsencesService } from '../../services/absences/absences.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -34,7 +34,7 @@ export class DemandeAbsenceComponent implements OnInit {
   // Contient les données de l'absence en cours d'édition
   currentAbsence: any = {};
 
-  constructor(private absenceService: AbsenceService, private dialog: MatDialog) { }
+  constructor(private absencesService: AbsencesService, private dialog: MatDialog) { }
 
   /**
    * Ouvre une boîte de dialogue pour modifier une absence
@@ -75,7 +75,7 @@ export class DemandeAbsenceComponent implements OnInit {
    * Charge la liste des absences de l'utilisateur depuis le backend
    */
   loadAbsences(): void {
-    this.absenceService.getAbsencesByUser().subscribe(
+    this.absencesService.getAbsencesByUser().subscribe(
       (data) => {
         this.absences = data;
       },
@@ -111,7 +111,7 @@ export class DemandeAbsenceComponent implements OnInit {
     };
 
     // Envoie la demande d'absence au backend
-    this.absenceService.addAbsence(requestData).subscribe({
+    this.absencesService.addAbsence(requestData).subscribe({
       next: () => {
         this.newAbsence = { dateDebut: '', dateFin: '', type: '', motif: '' }; // Réinitialise le formulaire
         this.loadAbsences(); // Recharge les absences après ajout
@@ -129,7 +129,7 @@ export class DemandeAbsenceComponent implements OnInit {
    */
   deleteAbsence(id: number): void {
     if (confirm('Voulez-vous vraiment supprimer cette absence ?')) {
-      this.absenceService.deleteAbsence(id).subscribe(() => {
+      this.absencesService.deleteAbsence(id).subscribe(() => {
         alert('Absence supprimée avec succès.');
         this.loadAbsences(); // Recharge la liste après suppression
       });

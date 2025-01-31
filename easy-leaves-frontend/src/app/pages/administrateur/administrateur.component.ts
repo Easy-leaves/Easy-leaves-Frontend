@@ -11,7 +11,6 @@ import { GestionRttEmployeurComponent } from '../../components/gestion-rtt-emplo
   styleUrl: './administrateur.component.css'
 })
 export class AdministrateurComponent {
-	// Propriété pour suivre la vue active
   vueActive: string = 'jours fériés';
 
   // Méthode pour changer la vue active

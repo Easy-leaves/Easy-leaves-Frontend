@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Statut } from '../../enums/Statut';
 import {formatDate} from '@angular/common'
 
-import { AbsencesService } from '../../services/absences.service';
+import { AbsencesService } from '../../services/absence/absences.service';
 import { AbsenceView } from '../ViewModels/AbsenceView';
 import { AbsenceModel } from '../ViewModels/AbsenceModel';
 
