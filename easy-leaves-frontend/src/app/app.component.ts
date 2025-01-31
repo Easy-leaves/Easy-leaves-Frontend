@@ -16,7 +16,7 @@ import { FooterComponent } from './components/footer/footer.component';
 export class AppComponent implements OnInit {
   title = 'easy-leaves-frontend';
   showHeader = true; // Affiche ou masque l'en-tête selon la page
-  isLoading = false; // Indique si une navigation est en cours
+  isLoading = false; // Indique si un chargement est en cours
 
   constructor(private router: Router) {}
 

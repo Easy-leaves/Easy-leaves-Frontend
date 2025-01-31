@@ -36,7 +36,7 @@ export class ListeCongesComponent implements OnInit{
 	    });
 	  }
 
-    // Change le mois sélectionné
+    // Change le mois par le mois sélectionné au changement de l'input
 	  onMonthChange(event: Event) {
 	    const value = (event.target as HTMLInputElement).value;
 	    this.selectedMonth = new Date(value);
@@ -180,7 +180,7 @@ export class ListeCongesComponent implements OnInit{
 
 
     exportToExcel(): void {
-      // Prepare données pour l'export
+      // Prépare données pour l'export
       const exportData = this.collaborators.map((collaborator) => {
         const row: { [key: string]: string | number } = { Collaborator: collaborator.name };
         this.daysInMonth.forEach((day, index) => {
@@ -189,14 +189,14 @@ export class ListeCongesComponent implements OnInit{
         return row;
       });
 
-      // Convertie les données en worksheet (feuille de travaille)
+      // Convertie les données en worksheet (feuille de travail)
       const worksheet = XLSX.utils.json_to_sheet(exportData);
 
       // Ajoute headers pour chaque jour du mois
       const headers = ['Collaborator', ...this.daysInMonth.map((day) => `${day.day} ${day.letter}`)];
       XLSX.utils.sheet_add_aoa(worksheet, [headers], { origin: 'A1' });
 
-      // Créez un classeur et ajoutez la feuille de travail
+      // Créez un classeur et ajout de la feuille de travail
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Liste des Congés');
 

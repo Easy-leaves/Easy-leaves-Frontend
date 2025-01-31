@@ -126,7 +126,7 @@ export class HistogrammeCongesComponent implements OnInit {
   }
 
 
-  // Modifie la semaine sélectionnée (vers l'avant ou vers l'arrière) et rafraîchisse les données
+  // Modifie la semaine sélectionnée (vers l'avant ou vers l'arrière) et rafraichit les données
   changeWeek(direction: number): void {
     const newStartDate = new Date(this.selectedWeek!.startDate);
     newStartDate.setDate(newStartDate.getDate() + direction * 7);
