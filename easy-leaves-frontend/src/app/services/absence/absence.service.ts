@@ -19,4 +19,5 @@ export class AbsenceService {
   getAbsencesByType(type: String): Observable<any> {
     return this.http.get<any[]>(`${this.apiUrl}/type/${type}`);
   }
+  
 }

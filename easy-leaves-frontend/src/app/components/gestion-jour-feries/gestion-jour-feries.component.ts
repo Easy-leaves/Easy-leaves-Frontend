@@ -7,7 +7,7 @@ import { Type } from '../../enums/Type';
 import { Absence } from '../../model/absence';
 import { FormsModule } from '@angular/forms';
 import { Statut } from '../../enums/Statut';
-import { ModalAddJourFerieComponent } from '../modal/modal-add-jour-ferie/modal-add-jour-ferie.component';
+import { ModalAddJourFerieComponent } from '../modal/modal-create-jour-ferie/modal-add-jour-ferie.component';
 import { ModalDeleteJourFerieComponent } from '../modal/modal-delete-jour-ferie/modal-delete-jour-ferie.component';
 import { ModalUpdateJourFerieComponent } from "../modal/modal-update-jour-ferie/modal-update-jour-ferie.component";
 
@@ -218,7 +218,7 @@ export class GestionJourFeriesComponent {
     this.currentHoliday = {
       id: holiday.idAbsence,
       dateDebut: new Date(holiday.dates.split(' - ')[0]),
-      dateFin: new Date(holiday.dates.split(' - ')[0]),
+      dateFin: new Date(holiday.dates.split(' - ')[1]),
       utilisateurNom: '',
       motif: holiday.motif,
       statut: (Object.values(Statut).includes(holiday.statut as Statut) ? holiday.statut : Statut.VALIDEE) as Statut,
@@ -276,7 +276,7 @@ export class GestionJourFeriesComponent {
    * Met à jour la liste locale après suppression dans le backend.
    */
   submitDelete(holidayId: number): void {
-    this.absencesService.deleteHoliday(holidayId).subscribe(
+    this.absencesService.deleteAbsence(holidayId).subscribe(
       (response) => {
         this.holidays = this.holidays.filter((holiday) => holiday.idAbsence !== holidayId);
 

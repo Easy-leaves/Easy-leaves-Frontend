@@ -64,7 +64,7 @@ export class AbsencesService {
     });
   }
 
-  deleteHoliday(id: number): Observable<any> {
+  deleteAbsence(id: number): Observable<any> {
     return this.http
     .delete(
       `${this.apiUrl}/absences/delete/${id}`,
@@ -81,10 +81,47 @@ export class AbsencesService {
     .pipe(catchError(this.handleError));
   }
 
+  // Ajouter un RTT employeur
+  addRTTEmployeur(absence: AbsenceModel): Observable<AbsenceModel> {
+    return this.http.post<AbsenceModel>(
+      `${this.apiUrl}/absences/rtt-employeur/add`,
+      absence,
+      { headers: this.headers, withCredentials: true }
+    )
+    .pipe(catchError(this.handleError));
+  }
+
+  // Modifier un RTT employeur
+  updateRTTEmployeur(absence: AbsenceModel): Observable<AbsenceModel> {
+    return this.http.put<AbsenceModel>(
+      `${this.apiUrl}/absences/update/${absence.id}`,
+      absence,
+      { headers: this.headers, withCredentials: true }
+    )
+    .pipe(catchError(this.handleError));
+  }
+
+  // Supprimer un RTT employeur
+  deleteRTTEmployeur(id: number): Observable<any> {
+    return this.http
+      .delete(`${this.apiUrl}/absences/delete/${id}`, {
+        headers: this.headers,
+        withCredentials: true
+      })
+      .pipe(catchError(this.handleError));
+  }
+
   // Méthode de gestion des erreurs
   private handleError(error: any): Observable<never> {
     console.error('Une erreur est survenue :', error);
     return throwError(() => new Error(error.message || 'Erreur serveur'));
+  }
+
+  getRttEmployeurCount(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/absences/rtt-employeur/count`, {
+      headers: this.headers,
+      withCredentials: true
+    }).pipe(catchError(this.handleError));
   }
 }
 

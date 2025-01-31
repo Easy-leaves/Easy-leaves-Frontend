@@ -1,1 +1,9 @@
-<app-gestion-jour-feries></app-gestion-jour-feries>
+<div class="menu">
+	<button [class.selected]="vueActive === 'jours fériés'" (click)="changerVue('jours fériés')">Gestion des jours fériés</button>
+	<button [class.selected]="vueActive === 'rtt employeur'" (click)="changerVue('rtt employeur')">Histogramme par département</button>
+</div>
+
+<div class="contenu">
+  <app-gestion-jour-feries *ngIf="vueActive === 'jours fériés'"/>
+  <app-gestion-rtt-employeur *ngIf="vueActive === 'rtt employeur'"/>
+</div>
