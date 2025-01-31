@@ -1,6 +1,6 @@
 // Importation des modules et composants nécessaires
 import { Component, OnInit, NgModule } from '@angular/core';
-import { Router, Event, NavigationStart, NavigationEnd } from '@angular/router';
+import { Router, Event, NavigationStart, NavigationEnd, RouterModule } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
