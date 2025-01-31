@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GestionAbsencesComponent } from './gestion-absences.component';
+import { GestionCongeComponent } from './gestion-absences.component';
 
 describe('GestionAbsencesComponent', () => {
-  let component: GestionAbsencesComponent;
-  let fixture: ComponentFixture<GestionAbsencesComponent>;
+  let component: GestionCongeComponent;
+  let fixture: ComponentFixture<GestionCongeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GestionAbsencesComponent]
+      imports: [GestionCongeComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(GestionAbsencesComponent);
+    fixture = TestBed.createComponent(GestionCongeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AbsenceService } from '../../services/absence.service';
+import { AbsencesService } from '../../services/absences/absences.service';
 
 @Component({
   standalone: true,
@@ -14,7 +14,7 @@ export class EditAbsenceDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<EditAbsenceDialogComponent>, // Référence au dialogue pour pouvoir le fermer
     @Inject(MAT_DIALOG_DATA) public data: { absence: any }, // Injection des données passées au composant (l'absence à modifier)
-    private absenceService: AbsenceService // Service pour gérer les requêtes liées aux absences
+    private absencesService: AbsencesService // Service pour gérer les requêtes liées aux absences
   ) { }
 
   /**
@@ -30,7 +30,7 @@ export class EditAbsenceDialogComponent {
   submitEdit(): void {
     console.log('Données envoyées :', this.data.absence);
 
-    this.absenceService.updateAbsence(this.data.absence.id, this.data.absence).subscribe(
+    this.absencesService.updateAbsence(this.data.absence.id, this.data.absence).subscribe(
       (response) => {
         console.log('Absence mise à jour avec succès', response);
         this.dialogRef.close(true); // Ferme le modal et retourne "true" pour signaler une mise à jour réussie
