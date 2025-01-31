@@ -24,6 +24,7 @@ export class ListeCongesComponent implements OnInit{
 	    // this.fetchPublicHolidays();
 	  }
 
+    // Génère les jours du mois sélectionné
 	  generateDaysOfMonth(date: Date) {
 	    const year = date.getFullYear();
 	    const month = date.getMonth();
@@ -35,6 +36,7 @@ export class ListeCongesComponent implements OnInit{
 	    });
 	  }
 
+    // Change le mois par le mois sélectionné au changement de l'input
 	  onMonthChange(event: Event) {
 	    const value = (event.target as HTMLInputElement).value;
 	    this.selectedMonth = new Date(value);
@@ -43,6 +45,7 @@ export class ListeCongesComponent implements OnInit{
 	    // this.fetchPublicHolidays();
 	  }
 
+    // Change le mois (précédent ou suivant)
 	  changeMonth(direction: number): void {
 	    const newMonth = new Date(this.selectedMonth);
 	    newMonth.setMonth(newMonth.getMonth() + direction);
@@ -52,6 +55,7 @@ export class ListeCongesComponent implements OnInit{
 	    // this.fetchPublicHolidays();
 	  }
 
+    // Récupère l'utilisateur connecté et son département
 	  fetchUserConnected(): void {
 	    const userId = localStorage.getItem("idUser");
 	    this.utilisateursService.getUserById(parseInt(userId || '0')).subscribe({
@@ -63,7 +67,7 @@ export class ListeCongesComponent implements OnInit{
 	    });
 	  }
 
-
+    // Récupère la liste des collaborateurs d'un département
 	  fetchCollaborators(idDepartement: number) {
 	    this.utilisateursService.getUsersByDepartement(idDepartement).subscribe({
 	      next: (data) => {
@@ -80,6 +84,7 @@ export class ListeCongesComponent implements OnInit{
 	    });
 	  }
 
+    // Récupère les absences des collaborateurs pour le mois sélectionné
 	  fetchAbsences() {
 	    const month = this.selectedMonth.getMonth() + 1;
 	    const year = this.selectedMonth.getFullYear();
@@ -157,17 +162,17 @@ export class ListeCongesComponent implements OnInit{
 	  getAbsenceClass(absenceType: string): string {
 	    switch (absenceType) {
 	      case 'RTT_EMPLOYEUR':
-	        return 'bg-blue-300 text-white'; // Blue for RTT Employeur
+	        return 'bg-blue-300 text-white'; // Bleu pour RTT Employeur
 	      case 'RTT_EMPLOYE':
-	        return 'bg-green-300 text-white'; // Green for RTT Employé
+	        return 'bg-green-300 text-white'; // Vert pour RTT Employé
 	      case 'CONGE_PAYE':
-	        return 'bg-yellow-300 text-black'; // Yellow for Congé Payé
+	        return 'bg-yellow-300 text-black'; // Jaune pour Congé Payé
 	      case 'CONGE_SANS_SOLDE':
-	        return 'bg-red-300 text-white'; // Red for Congé Sans Solde
+	        return 'bg-red-300 text-white'; // Rouge pour Congé Sans Solde
 	      case 'AUTRE':
-	        return 'bg-purple-300 text-white'; // Purple for Autre
+	        return 'bg-purple-300 text-white'; // Violet pour Autre
 	      case 'FERIE':
-	        return 'bg-gray-400 text-white'; // Gray for public holidays
+	        return 'bg-gray-400 text-white'; // Gris pour public holidays
 	      default:
 	        return '';
 	    }
@@ -175,7 +180,7 @@ export class ListeCongesComponent implements OnInit{
 
 
     exportToExcel(): void {
-      // Prepare data for export
+      // Prépare données pour l'export
       const exportData = this.collaborators.map((collaborator) => {
         const row: { [key: string]: string | number } = { Collaborator: collaborator.name };
         this.daysInMonth.forEach((day, index) => {
@@ -184,18 +189,18 @@ export class ListeCongesComponent implements OnInit{
         return row;
       });
 
-      // Convert data to a worksheet
+      // Convertie les données en worksheet (feuille de travail)
       const worksheet = XLSX.utils.json_to_sheet(exportData);
 
-      // Add headers for each day of the month
+      // Ajoute headers pour chaque jour du mois
       const headers = ['Collaborator', ...this.daysInMonth.map((day) => `${day.day} ${day.letter}`)];
       XLSX.utils.sheet_add_aoa(worksheet, [headers], { origin: 'A1' });
 
-      // Create a workbook and append the worksheet
+      // Créez un classeur et ajout de la feuille de travail
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Liste des Congés');
 
-      // Export the workbook as an Excel file
+      // Exporter le classeur en tant que fichier Excel
       XLSX.writeFile(workbook, 'liste_conges.xlsx');
     }
 }
