@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog'
 import { EditAbsenceDialogComponent } from '../edit-absence-dialog/edit-absence-dialog.component';
-import { Statut } from '../../enums/Statut';
 
 @Component({
   selector: 'app-demande-absence',
@@ -13,44 +12,46 @@ import { Statut } from '../../enums/Statut';
   imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './demande-absence.component.html',
   styleUrls: ['./demande-absence.component.css'],
-
 })
 export class DemandeAbsenceComponent implements OnInit {
-  absences: any[] = []; // Liste des absences pour l'utilisateur authentifié
+  // Liste des absences pour l'utilisateur authentifié
+  absences: any[] = [];
+
+  // Objet représentant une nouvelle absence à créer
   newAbsence = {
     dateDebut: '',
     dateFin: '',
     type: '',
     motif: '',
   };
+
+  // ID de l'utilisateur authentifié
   userId: string | null = null;
 
+  // Indique si une absence est en cours d'édition
   editing: boolean = false;
-  currentAbsence: any = {};
 
-  // Mapping des types d'absence
-  private typeAbsenceMapping = {
-    'Congé sans solde': 'CONGE_SANS_SOLDE',
-    'Congé payé': 'CONGE_PAYE',
-    'RTT employé': 'RTT_EMPLOYE',
-    'RTT employeur': 'RTT_EMPLOYEUR',
-    'Autre': 'AUTRE',
-  } as const;
+  // Contient les données de l'absence en cours d'édition
+  currentAbsence: any = {};
 
   constructor(private absenceService: AbsenceService, private dialog: MatDialog) { }
 
+  /**
+   * Ouvre une boîte de dialogue pour modifier une absence
+   * @param absence L'absence à modifier
+   */
   openEditDialog(absence: any): void {
     const dialogRef = this.dialog.open(EditAbsenceDialogComponent, {
-      width: '400px', // Vous pouvez ajuster la largeur ici
-      height: 'auto', // Automatique ou définissez une hauteur
+      width: '400px',
+      height: 'auto',
       data: { absence },
-      panelClass: 'custom-dialog-container', // Classe personnalisée pour ajouter plus de styles
       position: {
         top: '50vh', // Centré verticalement
         left: '50vw', // Centré horizontalement
       },
     });
 
+    // Après la fermeture du dialog, recharge la liste des absences si une mise à jour a été faite
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.loadAbsences();
@@ -58,15 +59,21 @@ export class DemandeAbsenceComponent implements OnInit {
     });
   }
 
+  /**
+   * Méthode appelée lors de l'initialisation du composant
+   */
   ngOnInit(): void {
     this.userId = localStorage.getItem('idUser'); // Charge l'ID utilisateur depuis localStorage
     if (this.userId) {
-      this.loadAbsences();
+      this.loadAbsences(); // Charge la liste des absences de l'utilisateur
     } else {
       console.error('Utilisateur non authentifié');
     }
   }
 
+  /**
+   * Charge la liste des absences de l'utilisateur depuis le backend
+   */
   loadAbsences(): void {
     this.absenceService.getAbsencesByUser().subscribe(
       (data) => {
@@ -78,34 +85,36 @@ export class DemandeAbsenceComponent implements OnInit {
     );
   }
 
+  /**
+   * Active le mode édition pour une absence spécifique
+   * @param absence L'absence à éditer
+   */
   editAbsence(absence: any) {
     this.editing = true;
     this.currentAbsence = { ...absence };
   }
 
+  /**
+   * Soumet une nouvelle demande d'absence
+   */
   submitAbsence(): void {
-    // Valider les données avant l'envoi
+    // Vérifie si tous les champs obligatoires sont remplis
     if (!this.newAbsence.dateDebut || !this.newAbsence.dateFin || !this.newAbsence.type) {
       alert('Tous les champs obligatoires doivent être remplis.');
       return;
     }
 
-    // Préparer les données à envoyer au backend
-    // const requestData = {
-    //   dateDebut: this.newAbsence.dateDebut,
-    //   dateFin: this.newAbsence.dateFin,
-    //   type: this.newAbsence.type,
-    //   motif: this.newAbsence.motif,
-    // };
+    // Prépare les données à envoyer au backend
     const requestData = {
       ...this.newAbsence,
       utilisateur: { idUtilisateur: Number(this.userId) }, // Convertit userId en nombre
     };
 
+    // Envoie la demande d'absence au backend
     this.absenceService.addAbsence(requestData).subscribe({
-      next: (response) => {
-        this.absences.push(response);
-        this.newAbsence = { dateDebut: '', dateFin: '', type: '', motif: '' };
+      next: () => {
+        this.newAbsence = { dateDebut: '', dateFin: '', type: '', motif: '' }; // Réinitialise le formulaire
+        this.loadAbsences(); // Recharge les absences après ajout
       },
       error: (err) => {
         console.error('Erreur lors de l\'ajout de l\'absence:', err);
@@ -114,12 +123,15 @@ export class DemandeAbsenceComponent implements OnInit {
     });
   }
 
-
+  /**
+   * Supprime une absence après confirmation
+   * @param id L'ID de l'absence à supprimer
+   */
   deleteAbsence(id: number): void {
     if (confirm('Voulez-vous vraiment supprimer cette absence ?')) {
       this.absenceService.deleteAbsence(id).subscribe(() => {
         alert('Absence supprimée avec succès.');
-        this.loadAbsences();
+        this.loadAbsences(); // Recharge la liste après suppression
       });
     }
   }
