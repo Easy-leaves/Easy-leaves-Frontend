@@ -10,9 +10,6 @@ import { Statut } from '../../enums/Statut';
 import { ModalAddJourFerieComponent } from '../modal/modal-add-jour-ferie/modal-add-jour-ferie.component';
 import { ModalDeleteJourFerieComponent } from '../modal/modal-delete-jour-ferie/modal-delete-jour-ferie.component';
 import { ModalUpdateJourFerieComponent } from "../modal/modal-update-jour-ferie/modal-update-jour-ferie.component";
-import { ModalAddJourFerieComponent } from '../modal/modal-create-jour-ferie/modal-add-jour-ferie.component';
-import { ModalDeleteJourFerieComponent } from '../modal/modal-delete-jour-ferie/modal-delete-jour-ferie.component';
-import { ModalUpdateJourFerieComponent } from "../modal/modal-update-jour-ferie/modal-update-jour-ferie.component";
 
 @Component({
   selector: 'app-gestion-jour-feries',
